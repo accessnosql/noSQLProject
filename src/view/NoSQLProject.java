@@ -19,7 +19,8 @@ public class NoSQLProject {
    
     public static void main(String[] args) {
         
-        manager = new Manager();
+	
+        manager = Manager.getInstance();
         int option;
         do{
             showMenu();

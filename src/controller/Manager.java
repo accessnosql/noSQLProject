@@ -11,4 +11,11 @@ package controller;
  */
 public class Manager {
     
+    private Manager() {
+   
+	}
+     private static final Manager instance = new Manager();
+     public static Manager getInstance() { return instance; }
+	
 }
+
