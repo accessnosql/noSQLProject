@@ -19,6 +19,9 @@ import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
 public class Manager {
     
+    private static final Manager instance = new Manager();
+    public static Manager getInstance() { return instance; }
+    
     Connection connection = new Connection();
     ArangoDB arangoDB;
     
@@ -28,4 +31,8 @@ public class Manager {
                 .password(connection.getPass())
                 .registerModule(new VPackJdk8Module()).build();
     }
+
+   
+	
 }
+
