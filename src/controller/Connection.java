@@ -14,6 +14,8 @@ public class Connection {
     
     private String ip = "127.0.0.1";
     private int port = 8529;
+    private String user = "root";
+    private String pass = "admin";
     
     public Connection(){
     }
@@ -26,7 +28,15 @@ public class Connection {
         return port;
     }
 
+    public String getUser() {
+        return user;
+    }
 
+    public String getPass() {
+        return pass;
+    }
+
+    
     
     
 }
