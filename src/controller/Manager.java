@@ -16,6 +16,7 @@ import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
 import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
+import persistence.ArangoDAO;
 
 public class Manager {
     
@@ -23,13 +24,15 @@ public class Manager {
     public static Manager getInstance() { return instance; }
     
     Connection connection = new Connection();
-    ArangoDB arangoDB;
+    ArangoDAO arangoDAO;
     
     public Manager() {
-        arangoDB = new ArangoDB.Builder().host(connection.getIp(), connection.getPort())
-                .user(connection.getUser())
-                .password(connection.getPass())
-                .registerModule(new VPackJdk8Module()).build();
+        arangoDAO = new ArangoDAO();
+        arangoDAO.connect();
+    }
+    
+    public void insertEmployee(String name, String pass){
+        
     }
 
    

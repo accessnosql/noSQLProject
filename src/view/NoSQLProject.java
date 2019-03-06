@@ -28,7 +28,7 @@ public class NoSQLProject {
             
             switch(option){
                 case 1:
-                    //newEmployee();
+                    newEmployee();
                     break;
                 case 2:
                     //loginEmployee();
@@ -64,6 +64,14 @@ public class NoSQLProject {
                       
             }
         }while(option != 0);
+    }
+    
+    public static void newEmployee(){
+        System.out.println("New Employee:");
+        String name = InputMethods.askString("Insert employee name:");
+        String pass = InputMethods.askString("Insert password:");
+        manager.insertEmployee(name, pass);
+        
     }
     
       public static void showMenu(){

@@ -16,52 +16,35 @@ import java.util.List;
  */
 public class Employee {
     
-    private String id;
-    private String Name;
-    private LocalDateTime CreatedAt;
-    private LocalDateTime UpdatedAt;
+    //private String id;
+    private String name;
+    private String pass;
+   
+    private LocalDateTime loggedAt;
     private List <Incidence> incidenceList = new ArrayList<>();
     
-    public Employee() {
-    }
-
-    public Employee(String id, String Name, LocalDateTime CreatedAt, LocalDateTime UpdatedAt) {
-        this.id = id;
-        this.Name = Name;
-        this.CreatedAt = CreatedAt;
-        this.UpdatedAt = UpdatedAt;
-    }
-    
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+   
+    public Employee( String name, String pass) {
+        //this.id = id;
+        this.name = name;
+        this.pass = pass;
+        
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return CreatedAt;
+    public String getPass() {
+        return pass;
     }
 
-    public void setCreatedAt(LocalDateTime CreatedAt) {
-        this.CreatedAt = CreatedAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return UpdatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime UpdatedAt) {
-        this.UpdatedAt = UpdatedAt;
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 
     public List<Incidence> getIncidenceList() {
@@ -71,6 +54,10 @@ public class Employee {
     public void setIncidenceList(List<Incidence> incidenceList) {
         this.incidenceList = incidenceList;
     }
+    
+    
+
+   
     
     
     
