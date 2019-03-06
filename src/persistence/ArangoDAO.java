@@ -11,6 +11,7 @@ package persistence;
  */
 public class ArangoDAO {
     
+    
     public void connect(){
         
     }

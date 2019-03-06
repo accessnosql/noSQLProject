@@ -6,6 +6,7 @@
 package view;
 
 import controller.Manager;
+import java.awt.BorderLayout;
 import java.io.BufferedReader;
 
 /**
@@ -31,10 +32,10 @@ public class NoSQLProject {
                     newEmployee();
                     break;
                 case 2:
-                    //loginEmployee();
+                    loginEmployee();
                     break;
                 case 3:
-                    //updateEmployee();
+                    updateEmployee();
                     break;
                 case 4:
                     //deleteEmployee();
@@ -66,12 +67,60 @@ public class NoSQLProject {
         }while(option != 0);
     }
     
+    
+    public static void loginEmployee() {
+        System.out.println("Login employee:");
+        String name = InputMethods.askString("Insert your name:");
+        String pass = InputMethods.askString("Insert your password:");
+        manager.doEmployeeLogin(name, pass);
+    }
+    
     public static void newEmployee(){
         System.out.println("New Employee:");
         String name = InputMethods.askString("Insert employee name:");
         String pass = InputMethods.askString("Insert password:");
         manager.insertEmployee(name, pass);
         
+    }
+    
+    public static void updateEmployee() {
+        System.out.println("Update Employee:");
+        String newName = manager.getEmployeeName();
+        String newPass = manager.getEmployeePass();
+        boolean changes = false;
+        int option = -1;
+        do{
+            System.out.println("1. Actual name :" + manager.getEmployeeName());
+            System.out.println("2. Actual pass :" + manager.getEmployeePass());
+            System.out.println("3. Save changes");
+            System.out.println("0. Exit without changes.");
+            option = InputMethods.askInt("Select an option");
+            if(option < 0 || option > 3){
+                System.out.println("Wrong option");
+            }
+            else{
+                switch(option){
+                    case 1: newName = modifyName(); changes = true; break;
+                    case 2: newPass = modifyPass(manager.getEmployeePass()); changes = true; break;
+                    case 3: 
+                        if(changes) saveChanges(newName, newPass);
+                        else System.out.println("Change something first...");
+                }
+            }
+        }while(option != 0 || option != 3);
+    }
+    
+    public static String modifyName(){
+        return InputMethods.askString("Enter new name:");
+    }
+    
+    public static String modifyPass(String pass){
+        
+        return null;
+    }
+    
+    public static void saveChanges(String newName, String newPass){
+        manager.updateEmployee(newName, newPass);
     }
     
       public static void showMenu(){
