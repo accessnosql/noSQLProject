@@ -16,6 +16,7 @@ import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
 import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
+import model.Employee;
 import persistence.ArangoDAO;
 
 public class Manager {
@@ -32,6 +33,8 @@ public class Manager {
     }
     
     public void insertEmployee(String name, String pass){
+        
+        arangoDAO.insertEmployee(new Employee(name,pass));
         
     }
 

@@ -15,7 +15,7 @@ public class Connection {
     private String ip = "127.0.0.1";
     private int port = 8529;
     private String user = "root";
-    private String pass = "admin";
+    private String pass = "ticarango82";
     
     public Connection(){
     }
