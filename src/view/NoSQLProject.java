@@ -57,6 +57,16 @@ public class NoSQLProject {
                     break;
                 case 10:
                     //extras();
+                	break;
+                case 11:
+                	manager.createDatabase();
+                	break;
+                case 12:
+                	manager.createCollection("employees");
+                	break;
+                case 13:
+                	manager.createCollection("incidences");
+                	break;
                 case 0:
                     System.out.println("Leaving application");
                     break;
@@ -136,6 +146,9 @@ public class NoSQLProject {
         System.out.println("8. Get incidence from an employee destiny");
         System.out.println("9. Get incidence from an eployee origin");
         System.out.println("10. Extras");
+        System.out.println("11. Create database named 'organization'");
+        System.out.println("12. Create collection 'employees'");
+        System.out.println("13. Create collection 'incidences'");
         System.out.println("0. Exit");
     }
     }

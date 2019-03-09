@@ -5,17 +5,6 @@
  */
 package controller;
 
-import com.arangodb.ArangoCollection;
-import com.arangodb.ArangoCursor;
-import com.arangodb.ArangoDB;
-import com.arangodb.ArangoDBException;
-import com.arangodb.entity.BaseDocument;
-import com.arangodb.entity.CollectionEntity;
-import com.arangodb.model.AqlQueryOptions;
-import com.arangodb.util.MapBuilder;
-import com.arangodb.velocypack.VPackSlice;
-import com.arangodb.velocypack.exception.VPackException;
-import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 import model.Employee;
 import persistence.ArangoDAO;
 
@@ -26,12 +15,10 @@ public class Manager {
     private static final Manager instance = new Manager();
     public static Manager getInstance() { return instance; }
     
-    Connection connection = new Connection();
     ArangoDAO arangoDAO;
     
     public Manager() {
         arangoDAO = new ArangoDAO();
-        arangoDAO.connect();
     }
     
     public void insertEmployee(String name, String pass){
@@ -57,6 +44,18 @@ public class Manager {
     
     public String getEmployeePass(){
         return employeeLogged.getPass();
+    }
+    
+    
+    
+    //methods to test creation of dbs and collections
+    public void createDatabase() {
+    	arangoDAO.createDatabase();
+    }
+    
+ 
+    public void createCollection(String c) {
+    	arangoDAO.createCollection(c);
     }
 
    

@@ -6,7 +6,7 @@
 package persistence;
 
 import com.arangodb.ArangoDB;
-import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
+//import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
@@ -18,7 +18,7 @@ import com.arangodb.model.AqlQueryOptions;
 import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
-import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
+//import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 import model.Employee;
 
 /**
@@ -27,35 +27,61 @@ import model.Employee;
  */
 public class ArangoDAO {
 
-    Configuration configuration;
-    ArangoDB arangoDB;
+	private String ip = Configuration.ip;
+    private int port = Configuration.port;
+    private String user = Configuration.user;
+    private String pass = Configuration.pass;
+    
+    private final ArangoDB arangoDB;
+    private final String DBNAME = "organization";
 
     public ArangoDAO() {
-        configuration = new Configuration();
-        connect();
+    	arangoDB = new ArangoDB.Builder().user(user).password(pass).build();
     }
-
-    public void createdatabase() {
-        String dbName = "dbempleados";
-        try {
-            arangoDB.createDatabase(dbName);
-            System.out.println("Database created: " + dbName);
-        } catch (ArangoDBException e) {
-            System.err.println("Failed to create database: " + dbName + "; " + e.getMessage());
-        }
+    
+    
+    public void createDatabase() {
+ 			try {
+ 				arangoDB.createDatabase(DBNAME);
+ 				System.out.println("Database created: " + DBNAME);
+ 			} catch (final ArangoDBException e) {
+ 				System.err.println("Failed to create database: " + DBNAME + "; " + e.getMessage());
+ 			}
     }
-
-    private void crearcolecciones() {
-
+    
+    
+   public void createCollection(String collectionName) {
+ 			try {
+ 				final CollectionEntity myArangoCollection = arangoDB.db(DBNAME).createCollection(collectionName);
+ 				System.out.println("Collection created: " + myArangoCollection.getName());
+ 			} catch (final ArangoDBException e) {
+ 				System.err.println("Failed to create collection: " + collectionName + "; " + e.getMessage());
+ 			}
     }
+    
+    public void insertEmployee(Employee e) {
+			final BaseDocument myObject = new BaseDocument();
+			//myObject.setKey("myKey");
+			myObject.addAttribute("username", e.getName());
+			myObject.addAttribute("password", e.getPass());
+			try {
+				arangoDB.db(DBNAME).collection("employees").insertDocument(myObject);
+				System.out.println("Document created");
+			} catch (final ArangoDBException e1) {
+				System.err.println("Failed to create document. " + e1.getMessage());
+			}
+			
+    }
+    
+ /*
 
     public void updateEmpleado() {
-    /*    myObject.addAttribute("c", "Bar");
+       myObject.addAttribute("c", "Bar");
         try {
             arangoDB.db(dbName).collection(collectionName).updateDocument("myKey", myObject);
         } catch (ArangoDBException e) {
             System.err.println("Failed to update document. " + e.getMessage());
-        }*/
+        }
     }
 
     public void insertEmployee(Employee e) {
@@ -77,14 +103,9 @@ public class ArangoDAO {
     public void removeEmpleado(Employee e) {
 
     }
+    
+    */
 
-    public void connect() {
-        arangoDB = new ArangoDB.Builder().host(configuration.getIp(), configuration.getPort())
-                .user(configuration.getUser())
-                .password(configuration.getPass())
-                .registerModule(new VPackJdk8Module()).build();
-    }
+   
 
-    //Falta disconnect no se si es necesario.
-    //Falta crear database y colecciones si no existen, como saber si están?
 }
