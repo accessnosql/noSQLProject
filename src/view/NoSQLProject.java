@@ -49,7 +49,7 @@ public class NoSQLProject {
                     //incidencesList();
                     break;
                 case 7:
-                    IncidenceMethods.newIncidence(dbName, arangoDB);;
+                    //IncidenceMethods.newIncidence(dbName, arangoDB);;
                     break;
                 case 8:
                     //incidenceEmpDest();
