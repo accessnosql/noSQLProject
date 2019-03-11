@@ -26,7 +26,7 @@ public class Manager {
     }
     
     public void doEmployeeLogin(String name, String pass ){
-        //employeeLogged = arangoDAO.doEmployeeLogin(new Employee(name, pass));
+        employeeLogged = arangoDAO.doEmployeeLogin(name, pass);
     }
     
     public void updateEmployee(String name, String pass){

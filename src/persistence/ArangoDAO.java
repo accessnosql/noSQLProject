@@ -8,6 +8,8 @@ package persistence;
 import com.arangodb.ArangoDB;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
+import java.util.Map;
+
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
@@ -70,41 +72,24 @@ public class ArangoDAO {
 			} catch (final ArangoDBException e1) {
 				System.err.println("Failed to create document. " + e1.getMessage());
 			}
-			
+					
     }
     
- /*
-
-    public void updateEmpleado() {
-       myObject.addAttribute("c", "Bar");
-        try {
-            arangoDB.db(dbName).collection(collectionName).updateDocument("myKey", myObject);
-        } catch (ArangoDBException e) {
-            System.err.println("Failed to update document. " + e.getMessage());
-        }
-    }
-
-    public void insertEmployee(Employee e) {
-        BaseDocument myObject = new BaseDocument();
-        myObject.addAttribute("username", e.getName());
-        myObject.addAttribute("pass", e.getPass());
-        try {
-            arangoDB.db("dbempleados").collection("Empleado").insertDocument(myObject);
-            System.out.println("Document created");
-        } catch (ArangoDBException ex) {
-            System.err.println("Failed to create document. " + ex.getMessage());
-        }
-    }
-
-    public void updateEmpleado(Employee e) {
-
-    }
-
-    public void removeEmpleado(Employee e) {
-
+    public Employee doEmployeeLogin(String name, String pass) {
+    	//TODO hay que ver si se puede hacer sin key todo esta query
+    	Employee employee = null;
+    	
+		final BaseDocument myUpdatedDocument = arangoDB.db(DBNAME).collection("employees").getDocument("",
+			BaseDocument.class);
+		System.out.println("Key: " + myUpdatedDocument.getKey());
+		System.out.println("Attribute a: " + myUpdatedDocument.getAttribute("username"));
+		System.out.println("Attribute b: " + myUpdatedDocument.getAttribute("password"));
+		
+		return employee;
+    	
     }
     
-    */
+ 
 
    
 
