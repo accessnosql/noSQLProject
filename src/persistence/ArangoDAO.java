@@ -74,6 +74,16 @@ public class ArangoDAO {
 			}
 					
     }
+
+
+	public ArangoDB getArangoDB() {
+		return arangoDB;
+	}
+
+
+	public String getDBNAME() {
+		return DBNAME;
+	}
     
     public Employee doEmployeeLogin(String name, String pass) {
     	//TODO hay que ver si se puede hacer sin key todo esta query
