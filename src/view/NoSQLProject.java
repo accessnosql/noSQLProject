@@ -6,6 +6,8 @@
 package view;
 
 import controller.Manager;
+import persistence.IncidenceMethods;
+
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
 
@@ -47,7 +49,7 @@ public class NoSQLProject {
                     //incidencesList();
                     break;
                 case 7:
-                    //newIncidence();
+                    IncidenceMethods.newIncidence(dbName, arangoDB);;
                     break;
                 case 8:
                     //incidenceEmpDest();

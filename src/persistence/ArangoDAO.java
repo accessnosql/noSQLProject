@@ -72,6 +72,16 @@ public class ArangoDAO {
 			}
 			
     }
+
+
+	public ArangoDB getArangoDB() {
+		return arangoDB;
+	}
+
+
+	public String getDBNAME() {
+		return DBNAME;
+	}
     
  /*
 
