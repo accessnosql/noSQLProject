@@ -86,17 +86,26 @@ public class ArangoDAO {
 	}
     
     public Employee doEmployeeLogin(String name, String pass) {
-    	//TODO hay que ver si se puede hacer sin key todo esta query
     	Employee employee = null;
     	
-		final BaseDocument myUpdatedDocument = arangoDB.db(DBNAME).collection("employees").getDocument("",
-			BaseDocument.class);
-		System.out.println("Key: " + myUpdatedDocument.getKey());
-		System.out.println("Attribute a: " + myUpdatedDocument.getAttribute("username"));
-		System.out.println("Attribute b: " + myUpdatedDocument.getAttribute("password"));
-		
-		return employee;
-    	
+    	// execute AQL queries  empleado
+			try {
+				final String query = "FOR t IN employees FILTER t.username == @username and t.password == @password RETURN t";
+				final Map<String, Object> bindVars = new MapBuilder().put("username", name).get();
+				bindVars.put("password", pass);
+				final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+					BaseDocument.class);
+				if(cursor.hasNext()) {
+					BaseDocument b = cursor.next();
+					System.out.println("Key: " + b.getKey());
+					System.out.println("name " + b.getAttribute("username"));
+					System.out.println("pass " + b.getAttribute("password"));
+				} // else user/pass wrong
+				
+			} catch (final ArangoDBException e) {
+				System.err.println("Failed to execute query. " + e.getMessage());
+			}
+    	return employee;
     }
     
  

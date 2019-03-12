@@ -106,9 +106,9 @@ package persistence;
 				collection.insertDocument(value);
 			}
 
-			// execute AQL queries
+			// execute AQL queries  empleado
 			try {
-				final String query = "FOR t IN firstCollection FILTER t.name == @name RETURN t";
+				final String query = "FOR t IN firstCollection FILTER t.name == @name and t. RETURN t";
 				final Map<String, Object> bindVars = new MapBuilder().put("name", "Homer").get();
 				final ArangoCursor<BaseDocument> cursor = arangoDB.db(dbName).query(query, bindVars, null,
 					BaseDocument.class);

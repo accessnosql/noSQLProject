@@ -15,6 +15,6 @@ public class Configuration {
     public final static String ip = "127.0.0.1";
     public final static int port = 8529;
     public final static String user = "root";
-    public final static String pass = "admin";
+    public final static String pass = "stucom";
     
 }
