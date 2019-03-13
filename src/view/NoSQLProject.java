@@ -6,10 +6,13 @@
 package view;
 
 import controller.Manager;
+import model.Incidence;
+import persistence.ArangoDAO;
 import persistence.IncidenceMethods;
 
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -46,10 +49,10 @@ public class NoSQLProject {
                     //getIncidenceById();
                     break;
                 case 6:
-                    //incidencesList();
+                    showIncidences();
                     break;
                 case 7:
-                    //IncidenceMethods.newIncidence(dbName, arangoDB);;
+                    newIncidence();
                     break;
                 case 8:
                     //incidenceEmpDest();
@@ -87,12 +90,31 @@ public class NoSQLProject {
         manager.doEmployeeLogin(name, pass);
     }
     
+   
     public static void newEmployee(){
         System.out.println("New Employee:");
         String name = InputMethods.askString("Insert employee name:");
         String pass = InputMethods.askString("Insert password:");
         manager.insertEmployee(name, pass);
         
+    }
+    
+    public static void newIncidence() {
+    	System.out.println("New Incidence");
+    	String id = InputMethods.askString("Incidence Number");
+    	String comment = InputMethods.askString("Write Incidence comment");
+    	String iName = InputMethods.askString("Write affair comment!");
+    	manager.insertIncidence(id, manager.actualTimeString(), comment, iName);
+    	
+    }
+    
+    public static void showIncidences() {
+    	for (Incidence incidence : manager.getIncidencesList()) {
+			System.out.println("id: " + incidence.getId());
+			System.out.println("name: " + incidence.getName());
+			System.out.println("createdAt: " + incidence.getCreatedAt());
+			System.out.println("comment: " + incidence.getComment());
+		}
     }
     
     public static void updateEmployee() {

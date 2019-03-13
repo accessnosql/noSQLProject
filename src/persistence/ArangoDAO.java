@@ -8,6 +8,7 @@ package persistence;
 import com.arangodb.ArangoDB;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.arangodb.ArangoCollection;
@@ -22,6 +23,7 @@ import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 import model.Employee;
+import model.Incidence;
 
 /**
  *
@@ -74,6 +76,45 @@ public class ArangoDAO {
 			}
 					
     }
+    
+    
+    // Metodo que crea una nueva incidencia en la base de datos
+    public void createIncidence(Incidence i) {
+    	final BaseDocument myObject = new BaseDocument();
+    	myObject.addAttribute("id", i.getId());
+    	myObject.addAttribute("createdAt", i.getCreatedAt());
+    	myObject.addAttribute("comment", i.getComment());
+    	myObject.addAttribute("name", i.getName());
+    	try {
+			arangoDB.db(DBNAME).collection("incidences").insertDocument(myObject);
+			System.out.println("incidence send");
+		} catch (final ArangoDBException e1) {
+			System.err.println("Failed to create incidence . " + e1.getMessage());
+		}
+    }
+    
+    // Metodo que recupera toda la lista de incidencias que se han puesto en la base de datos
+    public ArrayList<Incidence> incidencesList() {
+    	
+    	ArrayList<Incidence> incidencesList = new ArrayList<Incidence>();
+    	try {
+			final String query = "FOR t IN incidences return t";
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				System.out.println("id: " + b.getAttribute("id"));
+				System.out.println("name: " + b.getAttribute("name"));
+				System.out.println("comment " + b.getAttribute("comment"));
+				System.out.println("createdAt " + b.getAttribute("createdAt") );
+				incidencesList.add(new Incidence(b.getAttribute("id").toString(), b.getAttribute("createdAt").toString(), b.getAttribute("name").toString(),b.getAttribute("comment").toString()));
+			} // else user/pass wrong
+			return incidencesList;
+		} catch (final ArangoDBException e) {
+			System.err.println("Failed to execute query. " + e.getMessage());
+		}
+    	
+    	return null;
+    }
 
 
 	public ArangoDB getArangoDB() {
@@ -108,8 +149,6 @@ public class ArangoDAO {
     	return employee;
     }
     
- 
 
-   
 
 }

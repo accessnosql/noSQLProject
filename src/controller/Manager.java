@@ -6,7 +6,13 @@
 package controller;
 
 import model.Employee;
+import model.Incidence;
 import persistence.ArangoDAO;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Manager {
     
@@ -57,8 +63,28 @@ public class Manager {
     public void createCollection(String c) {
     	arangoDAO.createCollection(c);
     }
+    
+    
+    //Incidence Methods
+    public void insertIncidence(String id, String createdAt, String comment, String name){
+        arangoDAO.createIncidence(new Incidence(id, createdAt, name, comment));
+    }
+    
+    public ArrayList<Incidence> getIncidencesList() {
+    	return arangoDAO.incidencesList();
+    }
+    
+    
+    // Utilities
+    public String actualTimeString() {
+    	LocalDateTime now = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-   
+        String formatDateTime = now.format(formatter);
+        return formatDateTime;
+    }
+    
+    
 	
 }
 

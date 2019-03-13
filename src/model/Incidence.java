@@ -15,18 +15,14 @@ import java.util.Date;
 public class Incidence {
     
     private String id;
-    private LocalDateTime CreatedAt;
-    private LocalDateTime UpdatedAt;
+    private String createdAt;
     private String name;
     private String comment;
     
-    public Incidence() {
-    }
 
-    public Incidence(String id, LocalDateTime CreatedAt, LocalDateTime UpdatedAt, String name, String comment) {
+    public Incidence(String id, String CreatedAt, String name, String comment) {
         this.id = id;
-        this.CreatedAt = CreatedAt;
-        this.UpdatedAt = UpdatedAt;
+        this.createdAt = CreatedAt;
         this.name = name;
         this.comment = comment;
     }
@@ -38,22 +34,6 @@ public class Incidence {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return CreatedAt;
-    }
-
-    public void setCreatedAt(LocalDateTime CreatedAt) {
-        this.CreatedAt = CreatedAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return UpdatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime UpdatedAt) {
-        this.UpdatedAt = UpdatedAt;
     }
 
     public String getName() {
@@ -71,6 +51,15 @@ public class Incidence {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		createdAt = createdAt;
+	}
+    
     
     
     
