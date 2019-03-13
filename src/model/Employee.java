@@ -19,7 +19,7 @@ public class Employee {
     //private String id;
     private String name;
     private String pass;
-   
+    private String arangoKey;
     private LocalDateTime loggedAt;
     private List <Incidence> incidenceList = new ArrayList<>();
     
@@ -53,6 +53,14 @@ public class Employee {
 
     public void setIncidenceList(List<Incidence> incidenceList) {
         this.incidenceList = incidenceList;
+    }
+    
+    public String getArangoKey() {
+    	return arangoKey; 
+    }
+    
+    public void setArangoKey(String arangoKey) {
+    	this.arangoKey = arangoKey;
     }
     
     

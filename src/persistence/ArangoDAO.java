@@ -20,6 +20,8 @@ import com.arangodb.model.AqlQueryOptions;
 import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
+
+import exceptions.EmployeeException;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 import model.Employee;
 
@@ -85,11 +87,9 @@ public class ArangoDAO {
 		return DBNAME;
 	}
     
-    public Employee doEmployeeLogin(String name, String pass) {
-    	Employee employee = null;
-    	
+    public Employee doEmployeeLogin(String name, String pass) throws EmployeeException, ArangoDBException {
     	// execute AQL queries  empleado
-			try {
+			
 				final String query = "FOR t IN employees FILTER t.username == @username and t.password == @password RETURN t";
 				final Map<String, Object> bindVars = new MapBuilder().put("username", name).get();
 				bindVars.put("password", pass);
@@ -97,19 +97,35 @@ public class ArangoDAO {
 					BaseDocument.class);
 				if(cursor.hasNext()) {
 					BaseDocument b = cursor.next();
-					System.out.println("Key: " + b.getKey());
-					System.out.println("name " + b.getAttribute("username"));
-					System.out.println("pass " + b.getAttribute("password"));
-				} // else user/pass wrong
-				
-			} catch (final ArangoDBException e) {
-				System.err.println("Failed to execute query. " + e.getMessage());
-			}
-    	return employee;
+					//System.out.println("Key: " + b.getKey());
+					//System.out.println("name " + b.getAttribute("username"));
+					//System.out.println("pass " + b.getAttribute("password"));
+					Employee e = new Employee(b.getAttribute("username").toString(), b.getAttribute("password").toString());
+					e.setArangoKey(b.getKey());
+					return e;
+				} 
+				else {
+					throw new EmployeeException(EmployeeException.WRONG_LOGIN);
+				}
     }
     
- 
+    /**
+     * Called from doEmployeeLogin, adds last login date time
+     * @param date
+     */
+    public void doEmployeeLoginDate(String date) {
+    	
+    }
+    
+    public void updateEmployee(Employee e) throws ArangoDBException {
+    	final BaseDocument myObject = new BaseDocument();
+		myObject.addAttribute("username", e.getName());
+		myObject.addAttribute("password", e.getName());
+	    arangoDB.db(DBNAME).collection("employees").updateDocument("myKey", e.getArangoKey());
+	
+    }
+    
 
-   
 
 }
+

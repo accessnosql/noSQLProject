@@ -3,13 +3,11 @@ package exceptions;
 import java.util.Arrays;
 import java.util.List;
 
-public class MyException {
+public class EmployeeException extends Exception {
 
 	    public static final int WRONG_LOGIN = 0;
-	    
-	    
-	    public static final int OPTION_UNALLOWED = 1;
-	    public static final int WRONG_SERVICE = 2;
+	    public static final int WRONG_PASS_CHECK = 1;
+	    public static final int WRONG_PASS = 2;
 	    public static final int WRONG_SKILL = 3;
 	    public static final int WITHOUT_SKILLS = 4;
 	    public static final int DNI_INCORRECT_SIZE = 5;
@@ -31,9 +29,8 @@ public class MyException {
 	    
 	    private final List<String> messages = Arrays.asList(
 	            "<ERROR 001 : No user with that name/pass found>",
-	            
-	            "<ERROR 002 : Wrong parameter>",
-	            "<ERROR 003 : This service is not offered in any room>",
+	            "<ERROR 002 : Passwords dont match>",
+	            "<ERROR 003 : Wrong pass>",
 	            "<ERROR 004 : Skill for worker not recognized>",
 	            "<ERROR 005 : This worker has no skills>",
 	            "<ERROR 006 : Problem with DNI: incorrect size>",
@@ -55,7 +52,7 @@ public class MyException {
 	    
 	           
 	            
-	    public MyException(int code) {
+	    public EmployeeException(int code) {
 	        this.code = code;
 	    }
 
