@@ -1,3 +1,6 @@
+
+    
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,13 +9,13 @@
 package view;
 
 import controller.Manager;
-import model.Incidence;
-import persistence.ArangoDAO;
+import exceptions.EmployeeException;
 import persistence.IncidenceMethods;
 
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
-import java.time.LocalDateTime;
+
+import com.arangodb.ArangoDBException;
 
 /**
  *
@@ -27,11 +30,12 @@ public class NoSQLProject {
         
 	
         manager = Manager.getInstance();
-        int option;
+        int option = -1;
         do{
+           try {
             showMenu();
             option = InputMethods.askInt("Select an option:");
-            
+           
             switch(option){
                 case 1:
                     newEmployee();
@@ -49,10 +53,10 @@ public class NoSQLProject {
                     //getIncidenceById();
                     break;
                 case 6:
-                    showIncidences();
+                    //incidencesList();
                     break;
                 case 7:
-                    newIncidence();
+                    //IncidenceMethods.newIncidence(dbName, arangoDB);;
                     break;
                 case 8:
                     //incidenceEmpDest();
@@ -79,18 +83,20 @@ public class NoSQLProject {
                     System.out.println("Option not allowed");
                       
             }
+           }catch(EmployeeException | ArangoDBException e) {
+        	   System.out.println(e.getMessage());
+           }
         }while(option != 0);
     }
     
     
-    public static void loginEmployee() {
+    public static void loginEmployee() throws ArangoDBException, EmployeeException {
         System.out.println("Login employee:");
         String name = InputMethods.askString("Insert your name:");
         String pass = InputMethods.askString("Insert your password:");
-        manager.doEmployeeLogin(name, pass);
+        System.out.println(manager.doEmployeeLogin(name, pass));
     }
     
-   
     public static void newEmployee(){
         System.out.println("New Employee:");
         String name = InputMethods.askString("Insert employee name:");
@@ -99,59 +105,49 @@ public class NoSQLProject {
         
     }
     
-    public static void newIncidence() {
-    	System.out.println("New Incidence");
-    	String id = InputMethods.askString("Incidence Number");
-    	String comment = InputMethods.askString("Write Incidence comment");
-    	String iName = InputMethods.askString("Write affair comment!");
-    	manager.insertIncidence(id, manager.actualTimeString(), comment, iName);
-    	
-    }
-    
-    public static void showIncidences() {
-    	for (Incidence incidence : manager.getIncidencesList()) {
-			System.out.println("id: " + incidence.getId());
-			System.out.println("name: " + incidence.getName());
-			System.out.println("createdAt: " + incidence.getCreatedAt());
-			System.out.println("comment: " + incidence.getComment());
-		}
-    }
-    
-    public static void updateEmployee() {
-        System.out.println("Update Employee:");
-        String newName = manager.getEmployeeName();
-        String newPass = manager.getEmployeePass();
+    /*
+     * En la versión final este metodo solo se podrá aplicar si hay un employee logueado, si no dará error
+     */
+    public static void updateEmployee() throws EmployeeException, ArangoDBException {
+        System.out.println("Update Employee : "+ manager.getEmployeeName());
+        String name = manager.getEmployeeName();
+        String pass = manager.getEmployeePass();
+        String newName = "";
+        String newPassCheck1 = "";
         boolean changes = false;
-        int option = -1;
-        do{
-            System.out.println("1. Actual name :" + manager.getEmployeeName());
-            System.out.println("2. Actual pass :" + manager.getEmployeePass());
-            System.out.println("3. Save changes");
-            System.out.println("0. Exit without changes.");
-            option = InputMethods.askInt("Select an option");
-            if(option < 0 || option > 3){
-                System.out.println("Wrong option");
-            }
-            else{
-                switch(option){
-                    case 1: newName = modifyName(); changes = true; break;
-                    case 2: newPass = modifyPass(manager.getEmployeePass()); changes = true; break;
-                    case 3: 
-                        if(changes) saveChanges(newName, newPass);
-                        else System.out.println("Change something first...");
-                }
-            }
-        }while(option != 0 || option != 3);
+   
+        if(wantModify("Name : "+ name)) {
+        	changes = true;
+        	newName = InputMethods.askString("Enter new name");
+        }
+        if(wantModify("Pass : ****")) {
+        	changes = true;
+        	String actualPass = InputMethods.askString("Actual pass: ");
+        	if(actualPass.equals(pass)){
+              newPassCheck1 = InputMethods.askString("Enter new pass: ");
+        	  String newPassCheck2 = InputMethods.askString("Enter new pass again: ");
+        	  if(!newPassCheck1.contentEquals(newPassCheck2)) {
+        		  throw new EmployeeException(EmployeeException.WRONG_PASS_CHECK);
+        	  }
+        	}else {
+        		throw new EmployeeException(EmployeeException.WRONG_PASS);
+           }
+        }
+        if(changes && wantModify("Save changes")) {
+             manager.updateEmployee(newName, newPassCheck1);
+             System.out.println("Data successfully updated");
+        }
+       
     }
     
-    public static String modifyName(){
-        return InputMethods.askString("Enter new name:");
-    }
     
-    public static String modifyPass(String pass){
-        
-        return null;
-    }
+   public static boolean wantModify(String msg) {
+	   System.out.println(msg);
+	   if("".equals(InputMethods.askStringNullable("Return to modify, any other to pass"))){
+		   return true;
+	   }
+	   return false;
+   }
     
     public static void saveChanges(String newName, String newPass){
         manager.updateEmployee(newName, newPass);

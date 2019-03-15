@@ -37,6 +37,19 @@ public class InputMethods {
         return cadena;
     }
      
+     public static String askStringNullable(String texto) {
+         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+         String cadena = "";
+             try {
+                 System.out.println(texto);
+                 cadena = br.readLine();
+             } catch (IOException ex) {
+                 System.out.println("Error de entrada / salida.");
+             }
+        
+         return cadena;
+     }
+     
      /**
       * Method for enter int number from keyboard
       * @param texto - String

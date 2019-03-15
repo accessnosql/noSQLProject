@@ -21,6 +21,8 @@ import com.arangodb.model.AqlQueryOptions;
 import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
+
+import exceptions.EmployeeException;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 import model.Employee;
 import model.Incidence;
@@ -138,15 +140,37 @@ public class ArangoDAO {
 					BaseDocument.class);
 				if(cursor.hasNext()) {
 					BaseDocument b = cursor.next();
-					System.out.println("Key: " + b.getKey());
-					System.out.println("name " + b.getAttribute("username"));
-					System.out.println("pass " + b.getAttribute("password"));
-				} // else user/pass wrong
+					//System.out.println("Key: " + b.getKey());
+					//System.out.println("name " + b.getAttribute("username"));
+					//System.out.println("pass " + b.getAttribute("password"));
+					Employee e = new Employee(b.getAttribute("username").toString(), b.getAttribute("password").toString());
+					e.setArangoKey(b.getKey());
+					return e;
+				} 
+				else {
+					throw new EmployeeException(EmployeeException.WRONG_LOGIN);
+				}
+			} catch (Exception e) {
 				
-			} catch (final ArangoDBException e) {
-				System.err.println("Failed to execute query. " + e.getMessage());
 			}
-    	return employee;
+			return employee; //TODO:
+			
+    }
+    
+    /**
+     * Called from doEmployeeLogin, adds last login date time
+     * @param date
+     */
+    public void doEmployeeLoginDate(String date) {
+    	
+    }
+    
+    public void updateEmployee(Employee e) throws ArangoDBException {
+    	final BaseDocument myObject = new BaseDocument();
+		myObject.addAttribute("username", e.getName());
+		myObject.addAttribute("password", e.getName());
+	    arangoDB.db(DBNAME).collection("employees").updateDocument("myKey", e.getArangoKey());
+	
     }
     
 

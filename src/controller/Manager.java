@@ -5,6 +5,9 @@
  */
 package controller;
 
+import com.arangodb.ArangoDBException;
+
+import exceptions.EmployeeException;
 import model.Employee;
 import model.Incidence;
 import persistence.ArangoDAO;
@@ -31,12 +34,17 @@ public class Manager {
         arangoDAO.insertEmployee(new Employee(name, pass));
     }
     
-    public void doEmployeeLogin(String name, String pass ){
+    public String doEmployeeLogin(String name, String pass) throws ArangoDBException, EmployeeException{
         employeeLogged = arangoDAO.doEmployeeLogin(name, pass);
+        return "Welcome employee " + employeeLogged.getName();
     }
     
-    public void updateEmployee(String name, String pass){
-       // arangoDAO.updateEmployee(new Employee(name, pass));
+    
+    public void updateEmployee(String name, String pass) throws ArangoDBException{
+    //we send actual employee data and new employee data
+      employeeLogged.setName(name);
+      employeeLogged.setPass(pass);
+      arangoDAO.updateEmployee(employeeLogged);
     }
     
     
