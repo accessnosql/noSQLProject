@@ -5,9 +5,8 @@
  */
 package model;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,15 +19,12 @@ public class Employee {
     private String name;
     private String pass;
     private String arangoKey;
-    private LocalDateTime loggedAt;
     private List <Incidence> incidenceList = new ArrayList<>();
     
    
     public Employee( String name, String pass) {
-        //this.id = id;
         this.name = name;
-        this.pass = pass;
-        
+        this.pass = pass;   
     }
 
     public String getName() {

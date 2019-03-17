@@ -35,7 +35,7 @@ public class Manager {
     }
     
     public String doEmployeeLogin(String name, String pass) throws ArangoDBException, EmployeeException{
-        employeeLogged = arangoDAO.doEmployeeLogin(name, pass);
+        employeeLogged = arangoDAO.loginEmployee(name, pass);
         return "Welcome employee " + employeeLogged.getName();
     }
     

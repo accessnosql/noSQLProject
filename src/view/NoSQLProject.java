@@ -9,6 +9,7 @@
 package view;
 
 import controller.Manager;
+import controller.SwingController;
 import exceptions.EmployeeException;
 import persistence.IncidenceMethods;
 
@@ -28,7 +29,9 @@ public class NoSQLProject {
    
     public static void main(String[] args) {
         
-	
+	    //instance of manager of swing
+    	SwingController swingController = SwingController.getInstance();
+    	//instance of manager of console view
         manager = Manager.getInstance();
         int option = -1;
         do{
