@@ -11,7 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-
+import exceptions.EmployeeException;
 import model.Employee;
 import model.Event;
 import model.Incidence;
@@ -48,6 +48,7 @@ public class SwingController {
 	   view = new MyView(login);
 	   arangoDAO = new ArangoDAO();
 	   initController();
+	   
 
 	 }
 	 
@@ -64,15 +65,44 @@ public class SwingController {
 	  * 
 	  */
 	 public void login() {
-		
+		 try {
 			 String name = login.getsName().getText();
 			 String pass = login.getPassword().getText();
 			 userLogged = arangoDAO.loginEmployee(name, pass);
+			 if(userLogged == null) {
+				 throw new EmployeeException(EmployeeException.WRONG_LOGIN);
+			 }
 			 loginEvent();
 			 System.out.println(userLogged.getName());
 			 menu = new MenuView();
 			 switchToMenu();
+		 }catch(EmployeeException e) {
+			 JOptionPane.showMessageDialog(null, e, "Info", JOptionPane.INFORMATION_MESSAGE);
+		 }
 		
+	 }
+	 
+	                                    //LOGIC
+	 
+	 
+	 //employees
+	 
+	 public void insertEmployee() {
+		 try {
+			 String name = employeesView.getTextField().getText();
+			 String pass1 = employeesView.getTextField_1().getText();
+			 String pass2 = employeesView.getTextField_2().getText();
+			 
+			 if(!pass1.equals(pass2)){
+				 throw new EmployeeException(EmployeeException.WRONG_PASS_CHECK);
+			 }
+			 arangoDAO.insertEmployee(new Employee(name, pass1));
+			 employeesView.getTextArea().setText("New employee added");
+		
+			 
+		 }catch(EmployeeException e) {
+			 JOptionPane.showMessageDialog(null, e, "Info", JOptionPane.INFORMATION_MESSAGE);
+		 }
 	 }
 	 
 	                                    //VIEWS
@@ -80,6 +110,7 @@ public class SwingController {
 		 login = new LoginView();
 		 view.setView((JPanel) login);
 		 userLogged = null;
+		 login.getLoginButton().addActionListener(e -> login()); 
 	 }
 	 
 	 public void switchToMenu()  {

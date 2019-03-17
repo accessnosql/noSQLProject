@@ -5,8 +5,11 @@ import java.util.List;
 
 public class EmployeeException extends Exception {
 
+	    //login
 	    public static final int WRONG_LOGIN = 0;
+	    //new employee
 	    public static final int WRONG_PASS_CHECK = 1;
+	    
 	    public static final int WRONG_PASS = 2;
 	    public static final int WRONG_SKILL = 3;
 	    public static final int WITHOUT_SKILLS = 4;
@@ -28,7 +31,9 @@ public class EmployeeException extends Exception {
 	    private int code;
 	    
 	    private final List<String> messages = Arrays.asList(
+	    		//login
 	            "<ERROR 001 : No user with that name/pass found>",
+	            //new employee
 	            "<ERROR 002 : Passwords dont match>",
 	            "<ERROR 003 : Wrong pass>",
 	            "<ERROR 004 : Skill for worker not recognized>",
