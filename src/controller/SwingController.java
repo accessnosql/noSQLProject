@@ -37,6 +37,7 @@ public class SwingController {
 	 private HistorialView historialView;
 	 private IncidencesView incidencesView;
 	 private ArangoDAO arangoDAO;
+	 private List<Employee> employees;
 	 
 	 
 	 private static final SwingController instance = new SwingController();
@@ -61,9 +62,12 @@ public class SwingController {
 		login.getLoginButton().addActionListener(e -> login()); 
 	}
 	 
-	 /**
-	  * 
-	  */
+	
+	 
+	 
+	                                    //LOGIC
+	 //login
+	 
 	 public void login() {
 		 try {
 			 String name = login.getsName().getText();
@@ -81,8 +85,6 @@ public class SwingController {
 		 }
 		
 	 }
-	 
-	                                    //LOGIC
 	 
 	 
 	 //employees
@@ -103,6 +105,21 @@ public class SwingController {
 		 }catch(EmployeeException e) {
 			 JOptionPane.showMessageDialog(null, e, "Info", JOptionPane.INFORMATION_MESSAGE);
 		 }
+	 }
+	 
+	 public void updateEmployee() {
+		 arangoDAO.updateEmployee(userLogged);
+	 }
+	 
+	 public String[] getEmployeeNames() {
+		 employees = arangoDAO.getAllEmployees();
+		 String[] employeeNames = new String[employees.size()];
+		 if(!employees.isEmpty()) {
+			 for(int i = 0; i < employees.size(); i++) {
+				 employeeNames[i] = employees.get(i).getName();
+			 }
+		 }
+		 return employeeNames;
 	 }
 	 
 	                                    //VIEWS
@@ -149,6 +166,12 @@ public class SwingController {
 	    	event.setDateTime(LocalDateTime.now());
 	    	arangoDAO.insertEvent(event);
 	    }
+
+		public Employee getUserLogged() {
+			return userLogged;
+		}
+	    
+	    
 	 
 	 
 	 

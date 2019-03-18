@@ -12,6 +12,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class EmployeesView extends JPanel {
 
@@ -20,6 +24,8 @@ public class EmployeesView extends JPanel {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextArea textArea;
+	private JTextField textField_3;
+	private JTextField textField_4;
 	/**
 	 * Create the panel.
 	 */
@@ -46,6 +52,7 @@ public class EmployeesView extends JPanel {
 		tabbedPane.addTab("Create new employee", null, panel, null);
 		panel.setLayout(null);
 		
+		//TAB 1: add employee
 		textField = new JTextField();
 		textField.setBounds(98, 103, 254, 37);
 		panel.add(textField);
@@ -90,15 +97,102 @@ public class EmployeesView extends JPanel {
 		textArea.setBounds(464, 146, 247, 79);
 		panel.add(textArea);
 		
+		
+		//TAB 2: update employee
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Update employee", null, panel_1, null);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel_3 = new JLabel("Update name");
+		lblNewLabel_3.setBounds(337, 54, 137, 14);
+		panel_1.add(lblNewLabel_3);
+		
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(255, 94, 254, 33);
+		panel_1.add(textField_3);
+		textField_3.setColumns(10);
+		textField_3.setText(controller.getUserLogged().getName());
+		
+		JLabel lblNewLabel_4 = new JLabel("Update password");
+		lblNewLabel_4.setBounds(337, 159, 137, 14);
+		panel_1.add(lblNewLabel_4);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(255, 211, 254, 41);
+		panel_1.add(textField_4);
+		textField_4.setColumns(10);
+		textField_4.setText(controller.getUserLogged().getPass());
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(255, 395, 254, 14);
+		panel_1.add(lblNewLabel);
+		
+		JButton btnNewButton_2 = new JButton("Update");
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(textField_3.getText() == "" || textField_4.getText() == "") {
+					lblNewLabel.setText("Some value must be added");
+				}
+				else {
+					controller.getUserLogged().setName(textField_3.getText());
+					controller.getUserLogged().setPass(textField_4.getText());
+					controller.updateEmployee();
+					lblNewLabel.setText("Employee updated");
+					textField_3.setText(controller.getUserLogged().getName());
+					textField_4.setText(controller.getUserLogged().getPass());
+				}
+			}
+		});
+		btnNewButton_2.setBounds(324, 306, 119, 23);
+		panel_1.add(btnNewButton_2);
+		
+		JLabel lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.setBounds(243, 376, 277, 33);
+		panel_1.add(lblNewLabel_5);
+		
+		
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Delete employee", null, panel_2, null);
+		panel_2.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Employees");
-		lblNewLabel.setBounds(339, 48, 139, 14);
-		add(lblNewLabel);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(54, 91, 231, 342);
+		panel_2.add(scrollPane);
+		
+		JList list = new JList(controller.getEmployeeNames());
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//String selectedItem = (String) JList.getSelectedValue();
+				//System.out.println((String) JList.getSelectedValue());
+				//lblNewLabel_5.setText(selectedItem);
+			}
+		});
+		scrollPane.setViewportView(list);
+		
+		
+		JLabel lblNewLabel_6 = new JLabel("Select employee to delete:");
+		lblNewLabel_6.setBounds(57, 42, 223, 27);
+		panel_2.add(lblNewLabel_6);
+		
+		JButton btnNewButton_3 = new JButton("Delete");
+		btnNewButton_3.setBounds(438, 215, 236, 49);
+		panel_2.add(btnNewButton_3);
+		
+		JLabel lblNewLabel_7 = new JLabel("New label");
+		lblNewLabel_7.setBounds(448, 128, 226, 27);
+		panel_2.add(lblNewLabel_7);
+		
+		JButton btnConfirm = new JButton("Confirm");
+		btnConfirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnConfirm.setBounds(438, 314, 236, 49);
+		panel_2.add(btnConfirm);
 	}
 	public JTextField getTextField() {
 		return textField;
@@ -112,5 +206,4 @@ public class EmployeesView extends JPanel {
 	public JTextArea getTextArea() {
 		return textArea;
 	}
-	
 }

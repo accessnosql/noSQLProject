@@ -9,6 +9,7 @@ import com.arangodb.ArangoDB;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.arangodb.ArangoCollection;
@@ -78,6 +79,25 @@ public class ArangoDAO {
 				System.err.println("Failed to create document. " + e1.getMessage());
 			}
 					
+    }
+    
+    public List<Employee> getAllEmployees(){
+    	List<Employee> employees = new ArrayList<>();
+    	try {
+			final String query = "FOR t IN employees return t";
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				Employee e = new Employee(b.getAttribute("username").toString(), b.getAttribute("password").toString());
+				e.setArangoKey(b.getKey());
+				employees.add(e);
+			  
+			} 
+			return employees;
+		} catch (final ArangoDBException e) {
+			System.err.println("Failed to execute query. " + e.getMessage());
+		}
+    	return employees;
     }
     
     
@@ -157,14 +177,7 @@ public class ArangoDAO {
 			return employee; //TODO:
 			
     }
-    
-    /**
-     * Called from doEmployeeLogin, adds last login date time
-     * @param date
-     */
-    public void doEmployeeLoginDate(String date) {
-    	
-    }
+   
     
     public void updateEmployee(Employee e) throws ArangoDBException {
     	final BaseDocument myObject = new BaseDocument();
@@ -173,6 +186,11 @@ public class ArangoDAO {
 	    arangoDB.db(DBNAME).collection("employees").updateDocument("myKey", e.getArangoKey());
 	
     }
+    
+    /*
+    FOR u IN users
+    UPDATE u._key WITH { name: CONCAT(u.firstName, " ", u.lastName) } IN users */
+
     
     
 

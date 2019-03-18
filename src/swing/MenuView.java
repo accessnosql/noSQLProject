@@ -77,7 +77,7 @@ public class MenuView extends JPanel {
 		bt5 = new JButton("Historial");
 		bt5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.switchToEmployeesView();
+				controller.switchToHistorialView();
 			}
 		});
 		bt5.setBounds(246, 346, 247, 78);
