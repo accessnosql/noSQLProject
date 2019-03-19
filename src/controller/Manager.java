@@ -11,6 +11,8 @@ import exceptions.EmployeeException;
 import model.Employee;
 import model.Incidence;
 import persistence.ArangoDAO;
+import utils.IncidenceLevel;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -74,8 +76,8 @@ public class Manager {
     
     
     //Incidence Methods
-    public void insertIncidence(String id, String createdAt, String comment, String name){
-        arangoDAO.createIncidence(new Incidence());
+    public void insertIncidence(String id, String comment, String employeeDest, IncidenceLevel level){
+        arangoDAO.createIncidence(new Incidence(id, comment, employeeDest, level));
     }
     
     public ArrayList<Incidence> getIncidencesList() {

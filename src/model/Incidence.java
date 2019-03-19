@@ -26,12 +26,21 @@ public class Incidence {
     
 
     public Incidence() {}
+    
     public Incidence(String id, String comment, String employeeDest, IncidenceLevel level) {
         this.id = id;
         this.comment = comment;
         this.employeeDest = employeeDest;
         this.level = level;
         this.createdAt = LocalDateTime.now();  
+    }
+    
+    public Incidence(String id, String comment, String employeeDest, IncidenceLevel level, LocalDateTime createdAt) {
+        this.id = id;
+        this.comment = comment;
+        this.employeeDest = employeeDest;
+        this.level = level;
+        this.createdAt = createdAt;  
     }
 
 

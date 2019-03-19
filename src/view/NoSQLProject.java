@@ -11,10 +11,14 @@ package view;
 import controller.Manager;
 import controller.SwingController;
 import exceptions.EmployeeException;
+import model.Incidence;
 import persistence.IncidenceMethods;
+import utils.IncidenceLevel;
 
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.arangodb.ArangoDBException;
 
@@ -56,10 +60,10 @@ public class NoSQLProject {
                     //getIncidenceById();
                     break;
                 case 6:
-                    //incidencesList();
+                    incidencesList();
                     break;
                 case 7:
-                    //IncidenceMethods.newIncidence(dbName, arangoDB);;
+                    insertIncidence();
                     break;
                 case 8:
                     //incidenceEmpDest();
@@ -108,6 +112,37 @@ public class NoSQLProject {
         
     }
     
+    public static void incidencesList() {
+    	for (Incidence incidence : manager.getIncidencesList()) {
+			System.out.println(incidence.getId());
+			System.out.println(incidence.getCreatedAt());
+			System.out.println(incidence.getComment());
+			System.out.println(incidence.getEmployeeDest());
+			System.out.println(incidence.getLevel());
+		}
+    }
+    
+    
+    public static void insertIncidence() {
+    	
+    	/*
+    	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        private String id; //keydel que lo está creando
+        private LocalDateTime createdAt; //fecha de creacion
+        private String comment; //descripcion
+        private String employeeDest; //key del usuario destinatario
+        private IncidenceLevel level;*/
+        
+        
+    	System.out.println("New Inicidence:");
+    	String id= InputMethods.askString("Insert affair");
+    	String comment = InputMethods.askString("Insert comment");
+    	String employeeDest = InputMethods.askString("Insert employeeDest");
+    	IncidenceLevel level = IncidenceLevel.HIGH;
+    	
+    	manager.insertIncidence(id, comment,employeeDest, level);
+    	
+    }
     /*
      * En la versión final este metodo solo se podrá aplicar si hay un employee logueado, si no dará error
      */
