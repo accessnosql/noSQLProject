@@ -6,7 +6,10 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import utils.IncidenceLevel;
 
 /**
  *
@@ -14,51 +17,78 @@ import java.util.Date;
  */
 public class Incidence {
     
-    private String id;
-    private String createdAt;
-    private String name;
-    private String comment;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private String id; //keydel que lo está creando
+    private LocalDateTime createdAt; //fecha de creacion
+    private String comment; //descripcion
+    private String employeeDest; //key del usuario destinatario
+    private IncidenceLevel level;
     
 
-    public Incidence(String id, String CreatedAt, String name, String comment) {
+    public Incidence() {}
+    public Incidence(String id, String comment, String employeeDest, IncidenceLevel level) {
         this.id = id;
-        this.createdAt = CreatedAt;
-        this.name = name;
         this.comment = comment;
-    }
-    
-
-    public String getId() {
-        return id;
+        this.employeeDest = employeeDest;
+        this.level = level;
+        this.createdAt = LocalDateTime.now();  
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public String getComment() {
-        return comment;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 
-	public String getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
-		createdAt = createdAt;
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
+
+
+	public String getComment() {
+		return comment;
+	}
+
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+
+	public String getEmployeeDest() {
+		return employeeDest;
+	}
+
+
+	public void setEmployeeDest(String employeeDest) {
+		this.employeeDest = employeeDest;
+	}
+
+
+	public IncidenceLevel getLevel() {
+		return level;
+	}
+
+
+	public void setLevel(IncidenceLevel level) {
+		this.level = level;
+	}
+    
+	public String actualTimeString() {
+	    return createdAt.format(formatter);
+	}
+    
+    
     
     
     

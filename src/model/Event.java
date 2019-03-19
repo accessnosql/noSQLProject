@@ -7,7 +7,7 @@ import utils.Events;
 
 public class Event {
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private Events eventTipo;
 	private String employeeKey;
 	private LocalDateTime dateTime;

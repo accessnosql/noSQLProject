@@ -128,18 +128,22 @@ public class EmployeesView extends JPanel {
 		lblNewLabel.setBounds(255, 395, 254, 14);
 		panel_1.add(lblNewLabel);
 		
+		JLabel lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.setBounds(243, 376, 277, 33);
+		panel_1.add(lblNewLabel_5);
+		
 		JButton btnNewButton_2 = new JButton("Update");
 		btnNewButton_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(textField_3.getText() == "" || textField_4.getText() == "") {
-					lblNewLabel.setText("Some value must be added");
+					lblNewLabel_5.setText("No null values allowed");
 				}
 				else {
 					controller.getUserLogged().setName(textField_3.getText());
 					controller.getUserLogged().setPass(textField_4.getText());
 					controller.updateEmployee();
-					lblNewLabel.setText("Employee updated");
+					lblNewLabel_5.setText("Employee updated");
 					textField_3.setText(controller.getUserLogged().getName());
 					textField_4.setText(controller.getUserLogged().getPass());
 				}
@@ -148,9 +152,7 @@ public class EmployeesView extends JPanel {
 		btnNewButton_2.setBounds(324, 306, 119, 23);
 		panel_1.add(btnNewButton_2);
 		
-		JLabel lblNewLabel_5 = new JLabel("");
-		lblNewLabel_5.setBounds(243, 376, 277, 33);
-		panel_1.add(lblNewLabel_5);
+		
 		
 		
 		

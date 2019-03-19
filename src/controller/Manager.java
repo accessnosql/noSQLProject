@@ -75,7 +75,7 @@ public class Manager {
     
     //Incidence Methods
     public void insertIncidence(String id, String createdAt, String comment, String name){
-        arangoDAO.createIncidence(new Incidence(id, createdAt, name, comment));
+        arangoDAO.createIncidence(new Incidence());
     }
     
     public ArrayList<Incidence> getIncidencesList() {
