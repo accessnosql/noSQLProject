@@ -104,10 +104,11 @@ public class ArangoDAO {
     // Metodo que crea una nueva incidencia en la base de datos
     public void createIncidence(Incidence i) {
     	final BaseDocument myObject = new BaseDocument();
-    	myObject.addAttribute("id", i.getId());
-    	myObject.addAttribute("createdAt", i.getCreatedAt());
-    	myObject.addAttribute("comment", i.getComment());
-    	myObject.addAttribute("name", i.getName());
+    	myObject.addAttribute("Id", i.getId());
+    	myObject.addAttribute("CreatedAt", i.getCreatedAt());
+    	myObject.addAttribute("Comment", i.getComment());
+    	myObject.addAttribute("EmployeeDest", i.getEmployeeDest());
+    	myObject.addAttribute("Level", i.getLevel());
     	try {
 			arangoDB.db(DBNAME).collection("incidences").insertDocument(myObject);
 			System.out.println("incidence send");
@@ -126,10 +127,11 @@ public class ArangoDAO {
 			while(cursor.hasNext()) {
 				BaseDocument b = cursor.next();
 				System.out.println("id: " + b.getAttribute("id"));
-				System.out.println("name: " + b.getAttribute("name"));
-				System.out.println("comment " + b.getAttribute("comment"));
-				System.out.println("createdAt " + b.getAttribute("createdAt") );
-				incidencesList.add(new Incidence(b.getAttribute("id").toString(), b.getAttribute("createdAt").toString(), b.getAttribute("name").toString(),b.getAttribute("comment").toString()));
+				System.out.println("createdAt: " + b.getAttribute("createdAt"));
+				System.out.println("comment: " + b.getAttribute("comment"));
+				System.out.println("employeeDest: " + b.getAttribute("employeeDest"));
+				System.out.println("level: " + b.getAttribute("level"));
+				
 			} // else user/pass wrong
 			return incidencesList;
 		} catch (final ArangoDBException e) {
