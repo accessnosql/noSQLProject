@@ -58,6 +58,14 @@ public class Employee {
     public void setArangoKey(String arangoKey) {
     	this.arangoKey = arangoKey;
     }
+
+	@Override
+	public String toString() {
+		return name + " "  + arangoKey;
+	}
+    
+    
+    
     
     
 

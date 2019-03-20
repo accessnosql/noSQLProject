@@ -38,6 +38,7 @@ public class SwingController {
 	 private IncidencesView incidencesView;
 	 private ArangoDAO arangoDAO;
 	 private List<Employee> employees;
+	 private List<Incidence> incidences;
 	 
 	 
 	 private static final SwingController instance = new SwingController();
@@ -122,6 +123,26 @@ public class SwingController {
 		 return employeeNames;
 	 }
 	 
+	 public List<Employee> getEmployees(){
+		 return arangoDAO.getAllEmployees();
+	 }
+	 
+	 
+	                                   //INCIDENCES
+	 
+	 public void createIncidence(Incidence incidence) {
+		 incidence.setId(userLogged.getArangoKey());
+		 incidence.setCreatedAt(LocalDateTime.now());
+		 arangoDAO.createIncidence(incidence);
+	 }
+	 
+	 public void getIncidences() {
+		 incidences = arangoDAO.incidencesList();
+		 
+	 }
+	 
+	 
+	 
 	                                    //VIEWS
 	 public void switchToLogin() {
 		 login = new LoginView();
@@ -170,7 +191,7 @@ public class SwingController {
 		public Employee getUserLogged() {
 			return userLogged;
 		}
-	    
+		
 	    
 	 
 	 
