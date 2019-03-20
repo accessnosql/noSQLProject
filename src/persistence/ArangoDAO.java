@@ -16,9 +16,12 @@ import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
+import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionEntity;
+import com.arangodb.entity.DocumentCreateEntity;
 import com.arangodb.model.AqlQueryOptions;
+import com.arangodb.model.DocumentUpdateOptions;
 import com.arangodb.util.MapBuilder;
 import com.arangodb.velocypack.VPackSlice;
 import com.arangodb.velocypack.exception.VPackException;
@@ -29,6 +32,7 @@ import model.Employee;
 import model.Event;
 import model.Incidence;
 
+// https://docs.arangodb.com/3.4/Drivers/Java/Reference/Collection/DocumentManipulation.html
 /**
  *
  * @author alu2017454
@@ -104,17 +108,39 @@ public class ArangoDAO {
     // Metodo que crea una nueva incidencia en la base de datos
     public void createIncidence(Incidence i) {
     	final BaseDocument myObject = new BaseDocument();
-    	myObject.addAttribute("Id", i.getId());
-    	myObject.addAttribute("CreatedAt", i.getCreatedAt());
-    	myObject.addAttribute("Comment", i.getComment());
-    	myObject.addAttribute("EmployeeDest", i.getEmployeeDest());
-    	myObject.addAttribute("Level", i.getLevel());
+    	myObject.addAttribute("id", i.getId());
+    	myObject.addAttribute("createdAt", i.actualTimeString());
+    	myObject.addAttribute("comment", i.getComment());
+    	myObject.addAttribute("employeeDest", i.getEmployeeDest());
+    	myObject.addAttribute("level", i.getLevel().toString());
     	try {
 			arangoDB.db(DBNAME).collection("incidences").insertDocument(myObject);
 			System.out.println("incidence send");
 		} catch (final ArangoDBException e1) {
 			System.err.println("Failed to create incidence . " + e1.getMessage());
 		}
+    }
+    
+    // Metodo que modifica una incidencia, cambia la persona de destino
+    public void updateIncidence(String emKey, String inKey) {
+    	
+    	/*ArangoDB arango = new ArangoDB.Builder().build();
+    	ArangoDatabase db = arango.db("myDB");
+    	ArangoCollection collection = db.collection("some-collection");
+
+    	BaseDocument document = new BaseDocument();
+    	document.addAttribute("hello", "world");
+    	DocumentCreateEntity<BaseDocument> info = collection.insertDocument(document);
+
+    	document.addAttribute("hello", "world2");
+    	collection.updateDocument(info.getKey(), document, new DocumentUpdateOptions());
+
+    	BaseDocument doc = collection.getDocument(info.getKey());
+    	assertThat(doc.getAttribute("hello"), is("world2"));*/
+    	
+    	//final String query = "UPDATE " + inKey + " WITH {employeeDest:"+emKey+"} IN incidences";
+    	//System.out.println(query);
+
     }
     
     // Metodo que recupera toda la lista de incidencias que se han puesto en la base de datos

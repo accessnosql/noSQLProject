@@ -80,6 +80,11 @@ public class Manager {
         arangoDAO.createIncidence(new Incidence(id, comment, employeeDest, level));
     }
     
+    //Update Incidence
+    public void updateIncidence(String employeeDest) {
+    	arangoDAO.updateIncidence("1235","1235");
+    }
+    
     public ArrayList<Incidence> getIncidencesList() {
     	return arangoDAO.incidencesList();
     }

@@ -66,6 +66,7 @@ public class NoSQLProject {
                     insertIncidence();
                     break;
                 case 8:
+                	updateIncidence();
                     //incidenceEmpDest();
                     break;
                 case 9:
@@ -176,6 +177,14 @@ public class NoSQLProject {
              System.out.println("Data successfully updated");
         }
        
+    }
+    
+    public static void updateIncidence() {
+    	/*System.out.println("Update incidence!!!");
+    	
+    	String key = InputMethods.askString("write update incidence key?");*/
+    	
+    	manager.updateIncidence("1235");
     }
     
     
