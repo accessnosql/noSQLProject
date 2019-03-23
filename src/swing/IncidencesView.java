@@ -26,8 +26,11 @@ public class IncidencesView extends JPanel {
 
 	private final EmployeeListModel eListModel = new EmployeeListModel();
 	private final IncidenceListModel iListModel = new IncidenceListModel();
+	private JList list_2;
+	private JList list_4;
 	SwingController controller = SwingController.getInstance();
 	List<Incidence> incidences;
+	List<Incidence> incidencesSearch;
 	Incidence incidence;
 	/**
 	 * Create the panel.
@@ -204,7 +207,7 @@ public class IncidencesView extends JPanel {
 		scrollPane_3.setViewportView(list);
 		
 		
-		
+		//TAB 4: INCIDENCES FROM AN EMPLOYEE
 		
 		
 		JPanel panel_3 = new JPanel();
@@ -215,38 +218,77 @@ public class IncidencesView extends JPanel {
 		scrollPane_4.setBounds(57, 115, 182, 275);
 		panel_3.add(scrollPane_4);
 		
-		JList list_1 = new JList();
-		scrollPane_4.setViewportView(list_1);
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(330, 120, 419, 264);
+		panel_3.add(scrollPane_5);
+		list_2 = new JList();
+		scrollPane_5.setViewportView(list_2);
+		
+		JList<?> eo = new JList();
+		eo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int index = eo.locationToIndex(arg0.getPoint());
+				list_2 = new JList(controller.incidenceSearchByOrig(index));
+				scrollPane_5.setViewportView(list_2);	
+			}
+		});
+		
+		scrollPane_4.setViewportView(eo);
+		eo.setModel(eListModel);
+		eListModel.setEmployeesList(controller.getEmployees());
 		
 		JLabel lblNewLabel_6 = new JLabel("Select SENDER:");
 		lblNewLabel_6.setBounds(60, 59, 169, 23);
 		panel_3.add(lblNewLabel_6);
 		
-		JScrollPane scrollPane_5 = new JScrollPane();
-		scrollPane_5.setBounds(330, 120, 419, 264);
-		panel_3.add(scrollPane_5);
-		
-		JList list_2 = new JList();
-		scrollPane_5.setViewportView(list_2);
 		
 		JLabel lblNewLabel_7 = new JLabel("Incidences:");
 		lblNewLabel_7.setBounds(467, 63, 145, 14);
 		panel_3.add(lblNewLabel_7);
 		
+		
+		//TAB 5: INCIDENCES TO AN EMPLOYEE
+		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Incidences to an employee", null, panel_4, null);
 		panel_4.setLayout(null);
 		
-		JLabel lblNewLabel_8 = new JLabel("New label");
-		lblNewLabel_8.setBounds(102, 69, 46, 14);
+		JLabel lblNewLabel_8 = new JLabel("Select RECEIVER:");
+		lblNewLabel_8.setBounds(60, 59, 169, 23);
 		panel_4.add(lblNewLabel_8);
 		
 		JScrollPane scrollPane_6 = new JScrollPane();
-		scrollPane_6.setBounds(80, 126, 147, 238);
+		scrollPane_6.setBounds(57, 115, 182, 275);
 		panel_4.add(scrollPane_6);
 		
-		JList list_3 = new JList();
+		JScrollPane scrollPane_7 = new JScrollPane();
+		scrollPane_7.setBounds(330, 120, 419, 264);
+		panel_4.add(scrollPane_7);
+		
+		list_4 = new JList();
+		scrollPane_7.setViewportView(list_4);
+		
+		JList<?> list_3 = new JList();
+		list_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e0) {
+				int index = list_3.locationToIndex(e0.getPoint());
+				list_4 = new JList(controller.incidenceSearchByDest(index));
+				scrollPane_7.setViewportView(list_4);	
+			}
+		});
 		scrollPane_6.setViewportView(list_3);
+		list_3.setModel(eListModel);
+		eListModel.setEmployeesList(controller.getEmployees());
+		
+		JLabel lblNewLabel_9 = new JLabel("Incidences");
+		lblNewLabel_9.setBounds(467, 63, 145, 14);
+		panel_4.add(lblNewLabel_9);
+		
+		
+		
+		
 		
 		
 	}

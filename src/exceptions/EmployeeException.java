@@ -9,9 +9,10 @@ public class EmployeeException extends Exception {
 	    public static final int WRONG_LOGIN = 0;
 	    //new employee
 	    public static final int WRONG_PASS_CHECK = 1;
-	    
 	    public static final int WRONG_PASS = 2;
-	    public static final int WRONG_SKILL = 3;
+	    
+	    //no incidences from that employee
+	    public static final int NO_INCIDENCES_SENT = 3;
 	    public static final int WITHOUT_SKILLS = 4;
 	    public static final int DNI_INCORRECT_SIZE = 5;
 	    public static final int DNI_INCORRECT_NUM = 6;
@@ -36,7 +37,7 @@ public class EmployeeException extends Exception {
 	            //new employee
 	            "<ERROR 002 : Passwords dont match>",
 	            "<ERROR 003 : Wrong pass>",
-	            "<ERROR 004 : Skill for worker not recognized>",
+	            "<ERROR 004 : Has no incidences opened",
 	            "<ERROR 005 : This worker has no skills>",
 	            "<ERROR 006 : Problem with DNI: incorrect size>",
 	            "<ERROR 007 : Problem with DNI: only numbers accepted>",

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
@@ -182,27 +184,7 @@ public class ArangoDAO {
 		}
     }
     
-    // Metodo que modifica una incidencia, cambia la persona de destino
-    public void updateIncidence(String emKey, String inKey) {
-    	
-    	/*ArangoDB arango = new ArangoDB.Builder().build();
-    	ArangoDatabase db = arango.db("myDB");
-    	ArangoCollection collection = db.collection("some-collection");
-
-    	BaseDocument document = new BaseDocument();
-    	document.addAttribute("hello", "world");
-    	DocumentCreateEntity<BaseDocument> info = collection.insertDocument(document);
-
-    	document.addAttribute("hello", "world2");
-    	collection.updateDocument(info.getKey(), document, new DocumentUpdateOptions());
-
-    	BaseDocument doc = collection.getDocument(info.getKey());
-    	assertThat(doc.getAttribute("hello"), is("world2"));*/
-    	
-    	//final String query = "UPDATE " + inKey + " WITH {employeeDest:"+emKey+"} IN incidences";
-    	//System.out.println(query);
-
-    }
+    
     
     // Metodo que recupera toda la lista de incidencias que se han puesto en la base de datos
     public List<Incidence> incidencesList() {
@@ -239,6 +221,51 @@ public class ArangoDAO {
 		i.setLevel(IncidenceLevel.getIncidenceByString(m.getAttribute("level").toString()));
 		i.setArangoKey(m.getKey());
 		
+    	return i;
+    }
+    
+    public List<Incidence> findIncidencesByOrigin(Employee e){
+    	List<Incidence> incidences = new ArrayList<>();
+    	try {
+			final String query = "FOR t IN incidences FILTER t.id == @id RETURN t";
+			final Map<String, Object> bindVars = new MapBuilder().put("id", e.getArangoKey()).get();
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+				BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				incidences.add(incidenceConstructor(b));	
+			} 
+		} catch (Exception e0) {
+			JOptionPane.showMessageDialog(null, e0, "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+      return incidences;
+    }
+    
+    public List<Incidence> findIncidencesByDestin(Employee e){
+    	List<Incidence> incidences = new ArrayList<>();
+    	try {
+			final String query = "FOR t IN incidences FILTER t.employeeDest == @employeeDest RETURN t";
+			final Map<String, Object> bindVars = new MapBuilder().put("employeeDest", e.getArangoKey()).get();
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+				BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				incidences.add(incidenceConstructor(b));	
+			} 
+		} catch (Exception e0) {
+			JOptionPane.showMessageDialog(null, e0, "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+      return incidences;
+    }
+    
+    public Incidence incidenceConstructor(BaseDocument m) {
+    	Incidence i = new Incidence();
+		i.setId(m.getAttribute("id").toString());
+		i.setCreatedAtFromString(m.getAttribute("createdAt").toString());
+	    i.setComment(m.getAttribute("comment").toString());
+		i.setEmployeeDest(m.getAttribute("employeeDest").toString());
+		i.setLevel(IncidenceLevel.getIncidenceByString(m.getAttribute("level").toString()));
+		i.setArangoKey(m.getKey());
     	return i;
     }
 

@@ -83,7 +83,7 @@ public class Manager {
     
     //Update Incidence
     public void updateIncidence(String employeeDest) {
-    	arangoDAO.updateIncidence("1235","1235");
+    	//arangoDAO.updateIncidence("1235","1235");
     }
     
     public List<Incidence> getIncidencesList() {

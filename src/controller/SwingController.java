@@ -39,6 +39,7 @@ public class SwingController {
 	 private ArangoDAO arangoDAO;
 	 private List<Employee> employees;
 	 private List<Incidence> incidences;
+	 private List<Incidence> incidenceSearch;
 	 
 	 
 	 private static final SwingController instance = new SwingController();
@@ -130,7 +131,8 @@ public class SwingController {
 	 
 	 public List<Employee> getEmployees(){
 		 System.out.println("here");
-		 return arangoDAO.getAllEmployees();
+		 employees = arangoDAO.getAllEmployees();
+		 return employees;
 	 }
 	 
 	 
@@ -180,7 +182,33 @@ public class SwingController {
 	            ".  SUBJECT: " + i.getComment();
 	 }
 	 
+	 public String[] incidenceSearchByOrig(int index) {
+		 Employee e = employees.get(index);
+		 incidenceSearch = arangoDAO.findIncidencesByOrigin(e);
+		 if(incidenceSearch.isEmpty()) {
+			 return new String[] {"No incidences sent"};
+		 }
+		 return getIncidencesSearchString();
+	 }
 	 
+	 public String[] incidenceSearchByDest(int index) {
+		 Employee e = employees.get(index);
+		 incidenceSearch = arangoDAO.findIncidencesByDestin(e);
+		 if(incidenceSearch.isEmpty()) {
+			 return new String[] {"No incidences received"};
+		 }
+		 return getIncidencesSearchString();
+	 }
+	 
+	 public String[] getIncidencesSearchString() {
+		 String[] iString = new String[incidenceSearch.size()];
+		 for(int i = 0; i < incidenceSearch.size(); i++) {
+			 System.out.println(incidenceSearch.get(i));
+			 iString[i] = incidenceResume(incidenceSearch.get(i));
+			 System.out.println(iString[i]);
+		 }
+		 return iString;
+	 }
 	 
 	 
 	 
