@@ -112,6 +112,11 @@ public class SwingController {
 		 arangoDAO.updateEmployee(userLogged);
 	 }
 	 
+	 public void deleteEmployee(int index) {
+		 //TODO: al eliminar, ¿que pasa con las incidences? reasignar?
+		 arangoDAO.deleteEmployee(employees.get(index));
+	 }
+	 
 	 public String[] getEmployeeNames() {
 		 employees = arangoDAO.getAllEmployees();
 		 String[] employeeNames = new String[employees.size()];
@@ -124,6 +129,7 @@ public class SwingController {
 	 }
 	 
 	 public List<Employee> getEmployees(){
+		 System.out.println("here");
 		 return arangoDAO.getAllEmployees();
 	 }
 	 
@@ -136,10 +142,45 @@ public class SwingController {
 		 arangoDAO.createIncidence(incidence);
 	 }
 	 
-	 public void getIncidences() {
-		 incidences = arangoDAO.incidencesList();
-		 
+	 public List<Incidence> getIncidencesFromDAO() {
+		 //TODO refresco de la JList al añadir nueva incidence
+		 incidences = arangoDAO.incidencesList(); 
+		 for(Incidence i: incidences) {
+			 System.out.println(i.toString());
+		 }
+		 return incidences;
 	 }
+	 
+	 public String getIncidenceFromDAO(int index) {
+		 Incidence i = arangoDAO.getIncidenceByKey(incidences.get(index).getArangoKey());
+		 return incidenceLabel(i);
+	 }
+	 
+	 public String incidenceLabel(Incidence i) {
+		 return "Created by: " + arangoDAO.getEmployeeByKey(i.getId()).getName() + "\n"+
+				"Date: " + i.actualTimeString() + "\n"+
+				"Receiver: " + arangoDAO.getEmployeeByKey(i.getEmployeeDest()).getName() +"\n"+
+				"Level: " + i.getLevel().toString() + "\n"+
+				"Subject:" + i.getComment();
+	 }
+	 
+	 public String[] getIncidencesString() {
+		 String[] iString = new String[incidences.size()];
+		 for(int i = 0; i < incidences.size(); i++) {
+			 System.out.println(incidences.get(i));
+			 iString[i] = incidenceResume(incidences.get(i));
+			 System.out.println(iString[i]);
+		 }
+		 return iString;
+	 }
+	 
+	 public String incidenceResume(Incidence i) {
+		 return "DATE: " + i.actualTimeString() + ".  CREATED: " + arangoDAO.getEmployeeByKey(i.getId()) + ".  TO: " +
+	            arangoDAO.getEmployeeByKey(i.getEmployeeDest()) + ".  LEVEL: " + i.getLevel().toString() + 
+	            ".  SUBJECT: " + i.getComment();
+	 }
+	 
+	 
 	 
 	 
 	 

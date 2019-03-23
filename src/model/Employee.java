@@ -26,6 +26,10 @@ public class Employee {
         this.name = name;
         this.pass = pass;   
     }
+    
+    public Employee(String name) {
+    	this.name = name;
+    }
 
     public String getName() {
         return name;

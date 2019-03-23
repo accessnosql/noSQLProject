@@ -20,6 +20,7 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionEntity;
 import com.arangodb.entity.DocumentCreateEntity;
+import com.arangodb.entity.DocumentEntity;
 import com.arangodb.model.AqlQueryOptions;
 import com.arangodb.model.DocumentUpdateOptions;
 import com.arangodb.util.MapBuilder;
@@ -31,6 +32,7 @@ import exceptions.EmployeeException;
 import model.Employee;
 import model.Event;
 import model.Incidence;
+import utils.IncidenceLevel;
 
 // https://docs.arangodb.com/3.4/Drivers/Java/Reference/Collection/DocumentManipulation.html
 /**
@@ -70,6 +72,8 @@ public class ArangoDAO {
  				System.err.println("Failed to create collection: " + collectionName + "; " + e.getMessage());
  			}
     }
+   
+                                //EMPLOYEES
     
     public void insertEmployee(Employee e) {
 			final BaseDocument myObject = new BaseDocument();
@@ -83,6 +87,14 @@ public class ArangoDAO {
 				System.err.println("Failed to create document. " + e1.getMessage());
 			}
 					
+    }
+    
+    public Employee getEmployeeByKey(String arangoKey) {
+    	//TODO da un error en consola de nullpointer exception, revisar
+    	BaseDocument m = arangoDB.db(DBNAME).collection("employees").getDocument(arangoKey, BaseDocument.class);
+    	Employee e = new Employee(m.getAttribute("username").toString());
+		e.setArangoKey(m.getKey());
+    	return e;
     }
     
     public List<Employee> getAllEmployees(){
@@ -103,6 +115,55 @@ public class ArangoDAO {
 		}
     	return employees;
     }
+    
+    public Employee loginEmployee(String name, String pass) {
+    	Employee employee = null;
+    	
+    	// execute AQL queries  empleado
+			try {
+				final String query = "FOR t IN employees FILTER t.username == @username and t.password == @password RETURN t";
+				final Map<String, Object> bindVars = new MapBuilder().put("username", name).get();
+				bindVars.put("password", pass);
+				final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+					BaseDocument.class);
+				if(cursor.hasNext()) {
+					BaseDocument b = cursor.next();
+					//System.out.println("Key: " + b.getKey());
+					//System.out.println("name " + b.getAttribute("username"));
+					//System.out.println("pass " + b.getAttribute("password"));
+					Employee e = new Employee(b.getAttribute("username").toString(), b.getAttribute("password").toString());
+					e.setArangoKey(b.getKey());
+					return e;
+				} 
+				else {
+					throw new EmployeeException(EmployeeException.WRONG_LOGIN);
+				}
+			} catch (Exception e) {
+				
+			}
+			return employee; //TODO:
+			
+    }
+   
+    
+    public void updateEmployee(Employee e) throws ArangoDBException {
+    	BaseDocument m = arangoDB.db(DBNAME).collection("employees").getDocument(e.getArangoKey(), BaseDocument.class);
+    	m.updateAttribute("username", e.getName());
+    	m.updateAttribute("password", e.getPass());
+    	arangoDB.db(DBNAME).collection("employees").updateDocument(e.getArangoKey(), m);
+    }
+    
+   public void deleteEmployee(Employee e) throws ArangoDBException {
+	   arangoDB.db(DBNAME).collection("employees").deleteDocument(e.getArangoKey());
+   }
+
+    
+    
+
+    
+    
+    
+                                           //INCIDENCES
     
     
     // Metodo que crea una nueva incidencia en la base de datos
@@ -144,20 +205,21 @@ public class ArangoDAO {
     }
     
     // Metodo que recupera toda la lista de incidencias que se han puesto en la base de datos
-    public ArrayList<Incidence> incidencesList() {
-    	
-    	ArrayList<Incidence> incidencesList = new ArrayList<Incidence>();
+    public List<Incidence> incidencesList() {
+    	List<Incidence> incidencesList = new ArrayList<Incidence>();
     	try {
 			final String query = "FOR t IN incidences return t";
 			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
 			while(cursor.hasNext()) {
 				BaseDocument b = cursor.next();
-				System.out.println("id: " + b.getAttribute("id"));
-				System.out.println("createdAt: " + b.getAttribute("createdAt"));
-				System.out.println("comment: " + b.getAttribute("comment"));
-				System.out.println("employeeDest: " + b.getAttribute("employeeDest"));
-				System.out.println("level: " + b.getAttribute("level"));
-				
+				Incidence i = new Incidence();
+				i.setId(b.getAttribute("id").toString());
+				i.setCreatedAtFromString(b.getAttribute("createdAt").toString());
+			    i.setComment(b.getAttribute("comment").toString());
+				i.setEmployeeDest(b.getAttribute("employeeDest").toString());
+				i.setLevel(IncidenceLevel.getIncidenceByString(b.getAttribute("level").toString()));
+				i.setArangoKey(b.getKey());
+				incidencesList.add(i);
 			} // else user/pass wrong
 			return incidencesList;
 		} catch (final ArangoDBException e) {
@@ -165,6 +227,19 @@ public class ArangoDAO {
 		}
     	
     	return null;
+    }
+    
+    public Incidence getIncidenceByKey(String arangoKey) {
+    	BaseDocument m = arangoDB.db(DBNAME).collection("incidences").getDocument(arangoKey, BaseDocument.class);
+    	Incidence i = new Incidence();
+		i.setId(m.getAttribute("id").toString());
+		i.setCreatedAtFromString(m.getAttribute("createdAt").toString());
+	    i.setComment(m.getAttribute("comment").toString());
+		i.setEmployeeDest(m.getAttribute("employeeDest").toString());
+		i.setLevel(IncidenceLevel.getIncidenceByString(m.getAttribute("level").toString()));
+		i.setArangoKey(m.getKey());
+		
+    	return i;
     }
 
 
@@ -177,51 +252,7 @@ public class ArangoDAO {
 		return DBNAME;
 	}
     
-    public Employee loginEmployee(String name, String pass) {
-    	Employee employee = null;
-    	
-    	// execute AQL queries  empleado
-			try {
-				final String query = "FOR t IN employees FILTER t.username == @username and t.password == @password RETURN t";
-				final Map<String, Object> bindVars = new MapBuilder().put("username", name).get();
-				bindVars.put("password", pass);
-				final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
-					BaseDocument.class);
-				if(cursor.hasNext()) {
-					BaseDocument b = cursor.next();
-					//System.out.println("Key: " + b.getKey());
-					//System.out.println("name " + b.getAttribute("username"));
-					//System.out.println("pass " + b.getAttribute("password"));
-					Employee e = new Employee(b.getAttribute("username").toString(), b.getAttribute("password").toString());
-					e.setArangoKey(b.getKey());
-					return e;
-				} 
-				else {
-					throw new EmployeeException(EmployeeException.WRONG_LOGIN);
-				}
-			} catch (Exception e) {
-				
-			}
-			return employee; //TODO:
-			
-    }
-   
-    
-    public void updateEmployee(Employee e) throws ArangoDBException {
-    	final BaseDocument myObject = new BaseDocument();
-		myObject.addAttribute("username", e.getName());
-		myObject.addAttribute("password", e.getName());
-	    arangoDB.db(DBNAME).collection("employees").updateDocument("myKey", e.getArangoKey());
-	
-    }
-    
-    /*
-    FOR u IN users
-    UPDATE u._key WITH { name: CONCAT(u.firstName, " ", u.lastName) } IN users */
-
-    
-    
-
+                                          //HISTORIAL
     
     //Events methods
     public void insertEvent(Event e) {

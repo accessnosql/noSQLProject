@@ -17,4 +17,13 @@ public enum IncidenceLevel {
 		}
 		return null;
 	}
+	
+	public static IncidenceLevel getIncidenceByString(String s) {
+		switch(s) {
+		   case "LOW" : return IncidenceLevel.LOW; 
+		   case "MID" : return IncidenceLevel.MID; 
+		   case "HIGH": return IncidenceLevel.HIGH;
+		}
+		return null;
+	}
 }

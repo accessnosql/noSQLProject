@@ -23,6 +23,7 @@ public class Incidence {
     private String comment; //descripcion
     private String employeeDest; //key del usuario destinatario
     private IncidenceLevel level;
+    private String arangoKey;
     
 
     public Incidence() {}
@@ -62,6 +63,10 @@ public class Incidence {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	
+	public void setCreatedAtFromString(String date) {
+		this.createdAt = LocalDateTime.parse(date, formatter);
+	}
 
 
 	public String getComment() {
@@ -96,6 +101,23 @@ public class Incidence {
 	public String actualTimeString() {
 	    return createdAt.format(formatter);
 	}
+	
+	
+
+	public String getArangoKey() {
+		return arangoKey;
+	}
+
+	public void setArangoKey(String arangoKey) {
+		this.arangoKey = arangoKey;
+	}
+
+	@Override
+	public String toString() {
+		return "Incidence [_key =" + arangoKey + "]";
+	}
+	
+	
     
     
     

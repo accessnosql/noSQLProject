@@ -26,6 +26,8 @@ public class EmployeesView extends JPanel {
 	private JTextArea textArea;
 	private JTextField textField_3;
 	private JTextField textField_4;
+	
+	private int index;
 	/**
 	 * Create the panel.
 	 */
@@ -154,7 +156,7 @@ public class EmployeesView extends JPanel {
 		
 		
 		
-		
+		//delete employee
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Delete employee", null, panel_2, null);
@@ -164,37 +166,52 @@ public class EmployeesView extends JPanel {
 		scrollPane.setBounds(54, 91, 231, 342);
 		panel_2.add(scrollPane);
 		
+		JLabel result2 = new JLabel("");
+		result2.setBounds(416, 374, 258, 34);
+		panel_2.add(result2);
+		
 		JList list = new JList(controller.getEmployeeNames());
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//String selectedItem = (String) JList.getSelectedValue();
-				//System.out.println((String) JList.getSelectedValue());
-				//lblNewLabel_5.setText(selectedItem);
+				index = list.locationToIndex(e.getPoint());
 			}
 		});
 		scrollPane.setViewportView(list);
-		
+		JButton btnNewButton_3 = new JButton("Delete");
+		JButton btnConfirm = new JButton("Confirm");
+		btnConfirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.deleteEmployee(index);
+				btnConfirm.setVisible(false);
+				btnNewButton_3.setVisible(true);
+				result2.setText("Employee deleted");
+			}
+		});
 		
 		JLabel lblNewLabel_6 = new JLabel("Select employee to delete:");
 		lblNewLabel_6.setBounds(57, 42, 223, 27);
 		panel_2.add(lblNewLabel_6);
 		
-		JButton btnNewButton_3 = new JButton("Delete");
+		
+		
+		btnNewButton_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnNewButton_3.setVisible(false);
+				btnConfirm.setVisible(true);
+				
+			}
+		});
 		btnNewButton_3.setBounds(438, 215, 236, 49);
 		panel_2.add(btnNewButton_3);
 		
-		JLabel lblNewLabel_7 = new JLabel("New label");
-		lblNewLabel_7.setBounds(448, 128, 226, 27);
-		panel_2.add(lblNewLabel_7);
 		
-		JButton btnConfirm = new JButton("Confirm");
-		btnConfirm.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnConfirm.setBounds(438, 314, 236, 49);
 		panel_2.add(btnConfirm);
+		
+		
+		btnConfirm.setVisible(false);
 	}
 	public JTextField getTextField() {
 		return textField;

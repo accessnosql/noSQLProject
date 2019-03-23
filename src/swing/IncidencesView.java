@@ -3,6 +3,8 @@ package swing;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 import controller.SwingController;
 import model.EmployeeListModel;
 import model.Incidence;
+import model.IncidenceListModel;
 import utils.IncidenceLevel;
 
 import javax.swing.JTabbedPane;
@@ -17,11 +20,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JPasswordField;
 
 public class IncidencesView extends JPanel {
 
 	private final EmployeeListModel eListModel = new EmployeeListModel();
+	private final IncidenceListModel iListModel = new IncidenceListModel();
 	SwingController controller = SwingController.getInstance();
+	List<Incidence> incidences;
 	Incidence incidence;
 	/**
 	 * Create the panel.
@@ -38,13 +44,14 @@ public class IncidencesView extends JPanel {
 				controller.switchToMenu();
 			}
 		});
-		button.setBounds(66, 48, 127, 48);
+		button.setBounds(66, 48, 209, 48);
 		add(button);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 122, 834, 478);
 		add(tabbedPane);
 		
+		incidences = controller.getIncidencesFromDAO();
 		
 		//NEW INCIDENCE, TAB 1
 		incidence = new Incidence(); //creation of the new incidence to fill
@@ -92,7 +99,7 @@ public class IncidencesView extends JPanel {
 				//String selectedItem = (String) listEmpDest.getSelectedValue().get;
 				int index = listEmpDest.locationToIndex(e.getPoint());
 				//System.out.println(listEmpDest.locationToIndex(e.getPoint()));
-				System.out.println(controller.getEmployees().get(index).getArangoKey());
+				//System.out.println(controller.getEmployees().get(index).getArangoKey());
 				incidence.setEmployeeDest(controller.getEmployees().get(index).getArangoKey());
 			  }
 		    });
@@ -128,44 +135,118 @@ public class IncidencesView extends JPanel {
 		
 		
 		
-		//TAB 2: INCIDENCE BY id
+		//TAB 2: INCIDENCE BY key, we show a list with all arango key associated
 		
 		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Incidence by id", null, panel_1, null);
+		tabbedPane.addTab("Incidence by _Key", null, panel_1, null);
 		panel_1.setLayout(null);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(45, 107, 202, 310);
 		panel_1.add(scrollPane_2);
 		
-		//JList list = new JList(controller.getIncidencesId());
-		JList list = new JList();
-		scrollPane_2.setViewportView(list);
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(302, 197, 476, 220);
+		panel_1.add(textArea);
+		//JList listIncId = new JList(controller.getIncidencesId());
+		JList<?> listIncId = new JList();
+		listIncId.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = listIncId.locationToIndex(e.getPoint());
+				textArea.setText(controller.getIncidenceFromDAO(index));
+				//System.out.println(controller.getIncidencesFromDAO().get(index));
+			}
+		});
+		JLabel lblNewLabel_4 = new JLabel("New label");
+		lblNewLabel_4.setBounds(596, 60, 99, 42);
+		panel_1.add(lblNewLabel_4);
 		
-		JLabel lblNewLabel = new JLabel("Incidence search by  ID:");
+		listIncId.setModel(iListModel);
+		iListModel.setIncidenceList(incidences);
+		lblNewLabel_4.setText(Integer.toString(incidences.size()));
+		scrollPane_2.setViewportView(listIncId);
+		
+		
+		JLabel lblNewLabel = new JLabel("Actual incidences:");
 		lblNewLabel.setBounds(45, 60, 202, 23);
 		panel_1.add(lblNewLabel);
 		
 		JLabel lblNewLabel_2 = new JLabel("Incidence result:");
-		lblNewLabel_2.setBounds(375, 195, 296, 58);
+		lblNewLabel_2.setBounds(460, 158, 137, 42);
 		panel_1.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("TOTAL INCIDENCES:");
 		lblNewLabel_3.setBounds(460, 70, 126, 23);
 		panel_1.add(lblNewLabel_3);
 		
-		JLabel lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setBounds(493, 93, 46, 42);
-		panel_1.add(lblNewLabel_4);
+		
+		
+		//TAB 3: List of all incidences
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Incidence list", null, panel_2, null);
+		panel_2.setLayout(null);
+		
+		JLabel lblNewLabel_1 = new JLabel("Total:");
+		lblNewLabel_1.setBounds(363, 37, 46, 14);
+		panel_2.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_5 = new JLabel(Integer.toString(incidences.size()));
+		lblNewLabel_5.setBounds(419, 34, 46, 21);
+		panel_2.add(lblNewLabel_5);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(27, 83, 767, 341);
+		panel_2.add(scrollPane_3);
+		
+		JList<String> list = new JList(controller.getIncidencesString());
+		scrollPane_3.setViewportView(list);
+		
+		
+		
+		
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Incidences from an employee", null, panel_3, null);
+		panel_3.setLayout(null);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(57, 115, 182, 275);
+		panel_3.add(scrollPane_4);
+		
+		JList list_1 = new JList();
+		scrollPane_4.setViewportView(list_1);
+		
+		JLabel lblNewLabel_6 = new JLabel("Select SENDER:");
+		lblNewLabel_6.setBounds(60, 59, 169, 23);
+		panel_3.add(lblNewLabel_6);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(330, 120, 419, 264);
+		panel_3.add(scrollPane_5);
+		
+		JList list_2 = new JList();
+		scrollPane_5.setViewportView(list_2);
+		
+		JLabel lblNewLabel_7 = new JLabel("Incidences:");
+		lblNewLabel_7.setBounds(467, 63, 145, 14);
+		panel_3.add(lblNewLabel_7);
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Incidences to an employee", null, panel_4, null);
+		panel_4.setLayout(null);
+		
+		JLabel lblNewLabel_8 = new JLabel("New label");
+		lblNewLabel_8.setBounds(102, 69, 46, 14);
+		panel_4.add(lblNewLabel_8);
+		
+		JScrollPane scrollPane_6 = new JScrollPane();
+		scrollPane_6.setBounds(80, 126, 147, 238);
+		panel_4.add(scrollPane_6);
+		
+		JList list_3 = new JList();
+		scrollPane_6.setViewportView(list_3);
 		
 		
 	}

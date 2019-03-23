@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Manager {
     
@@ -85,7 +86,7 @@ public class Manager {
     	arangoDAO.updateIncidence("1235","1235");
     }
     
-    public ArrayList<Incidence> getIncidencesList() {
+    public List<Incidence> getIncidencesList() {
     	return arangoDAO.incidencesList();
     }
     
