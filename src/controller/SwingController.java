@@ -79,7 +79,7 @@ public class SwingController {
 				 throw new EmployeeException(EmployeeException.WRONG_LOGIN);
 			 }
 			 loginEvent();
-			 System.out.println(userLogged.getName());
+			 //System.out.println(userLogged.getName());
 			 menu = new MenuView();
 			 switchToMenu();
 		 }catch(EmployeeException e) {
@@ -208,6 +208,21 @@ public class SwingController {
 			 System.out.println(iString[i]);
 		 }
 		 return iString;
+	 }
+	 
+	                                   //HISTORIAL
+	 public String getLastLogin(int index) {
+		 List<Event> loginEvents = arangoDAO.getEventFromUserKey(employees.get(index).getArangoKey(), Events.USER_LOGIN);
+		 if(loginEvents.isEmpty()) {
+			 return "User " + employees.get(index).getName() + " hasn't logged yet";
+		 }
+		 int size = loginEvents.size() - 1;
+		 return loginEvents.get(size).getDateTimeFormatted();
+	 }
+	 
+	 public String deleteEmployeeLogins(Integer index) {
+		 arangoDAO.deleteLoginEvents(employees.get(index).getArangoKey(), Events.USER_LOGIN);
+		 return "Login historial deleted";
 	 }
 	 
 	 

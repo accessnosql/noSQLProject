@@ -11,6 +11,7 @@ public class Event {
 	private Events eventTipo;
 	private String employeeKey;
 	private LocalDateTime dateTime;
+	private String arangoKey;
 	
 	public Event() {}
 	
@@ -44,9 +45,23 @@ public class Event {
 		this.dateTime = dateTime;
 	}
 	
+	public void setDateTimeFromString(String date) {
+		this.dateTime = LocalDateTime.parse(date, formatter);
+	}
+	
 	public String getDateTimeFormatted() {
 		return dateTime.format(formatter);
 	}
+
+	public String getArangoKey() {
+		return arangoKey;
+	}
+
+	public void setArangoKey(String arangoKey) {
+		this.arangoKey = arangoKey;
+	}
+	
+	
 	
 	
 }

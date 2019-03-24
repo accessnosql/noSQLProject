@@ -34,6 +34,7 @@ import exceptions.EmployeeException;
 import model.Employee;
 import model.Event;
 import model.Incidence;
+import utils.Events;
 import utils.IncidenceLevel;
 
 // https://docs.arangodb.com/3.4/Drivers/Java/Reference/Collection/DocumentManipulation.html
@@ -194,14 +195,7 @@ public class ArangoDAO {
 			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
 			while(cursor.hasNext()) {
 				BaseDocument b = cursor.next();
-				Incidence i = new Incidence();
-				i.setId(b.getAttribute("id").toString());
-				i.setCreatedAtFromString(b.getAttribute("createdAt").toString());
-			    i.setComment(b.getAttribute("comment").toString());
-				i.setEmployeeDest(b.getAttribute("employeeDest").toString());
-				i.setLevel(IncidenceLevel.getIncidenceByString(b.getAttribute("level").toString()));
-				i.setArangoKey(b.getKey());
-				incidencesList.add(i);
+				incidencesList.add(incidenceConstructor(b));	
 			} // else user/pass wrong
 			return incidencesList;
 		} catch (final ArangoDBException e) {
@@ -285,7 +279,7 @@ public class ArangoDAO {
     public void insertEvent(Event e) {
     	final BaseDocument myObject = new BaseDocument();
 		//myObject.setKey("myKey");
-		myObject.addAttribute("event", e.getEventTipo());
+		myObject.addAttribute("event", e.getEventTipo().toString());
 		myObject.addAttribute("userKey", e.getEmployeeKey());
 		myObject.addAttribute("dateTime", e.getDateTimeFormatted());
 		try {
@@ -294,40 +288,57 @@ public class ArangoDAO {
 		} catch (final ArangoDBException e1) {
 			System.err.println("Failed to create document. " + e1.getMessage());
 		}
+		System.out.println(e.getEmployeeKey());
     }
     
+    public List<Event> getEventFromUserKey(String key, Events event){
+    	List<Event> loginE = new ArrayList<>();
+    	try {
+			final String query = "FOR t IN historial FILTER t.userKey == @userKey and t.event == @event RETURN t";
+			final Map<String, Object> bindVars = new MapBuilder().put("userKey", key).get();
+			bindVars.put("event", event.toString());
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+				BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				loginE.add(eventConstructor(b));	
+			} 
+		} catch (Exception e0) {
+			JOptionPane.showMessageDialog(null, e0, "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+      return loginE;
+    }
+    
+    public Event eventConstructor(BaseDocument b) {
+    	Event e = new Event();
+    	e.setDateTimeFromString(b.getAttribute("dateTime").toString());
+    	e.setEmployeeKey(b.getAttribute("userKey").toString());
+    	e.setEventTipo(Events.getEventByString(b.getAttribute("event").toString()));
+    	e.setArangoKey(b.getKey());
+    	return e;
+    }
+    
+    //TODO error
+    public void deleteLoginEvents(String key, Events event) {
+    	try {
+			final String query = "FOR t IN historial FILTER t.userKey == @userKey and t.event == @event RETURN t";
+			final Map<String, Object> bindVars = new MapBuilder().put("userKey", key).get();
+			bindVars.put("event", event.toString());
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+				BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				arangoDB.db(DBNAME).collection("historial").deleteDocument(b.getId());	
+			} 
+		} catch (Exception e0) {
+			JOptionPane.showMessageDialog(null, e0, "Info", JOptionPane.INFORMATION_MESSAGE);
+       }
+    
+    }
 }
     
     /*
-    // Método para insertar un nuevo empleado.
-    public void insertEmpleado(Empleado e);
-
-    // Método para validar el login de un empleado.
-    public boolean loginEmpleado(String user, String pass);
-
-    // Método para modificar el perfil de un empleado.
-    public void updateEmpleado(Empleado e);
-
-    // Método para eliminar un empleado.
-    public void removeEmpleado(Empleado e);
-
-    // Obtener una Incidencia a partir de su Id.
-    public Incidencia getIncidenciaById(int id);
-
-    // Obtener una lista de todas las incidencias
-    public List<Incidencia> selectAllIncidencias();
-
-    // Insertar una incidencia a partir de un objeto incidencia
-    public void insertIncidencia(Incidencia i);
-
-    // Obtener la lista de incidencias con destino un determinado
-    // empleado, a partir de un objeto empleado.
-    public List<Incidencia> getIncidenciaByDestino(Empleado e);
-
-    // Obtener la lista de incidencias con origen un determinado
-    // empleado, a partir de un objeto empleado.
-    public List<Incidencia> getIncidenciaByOrigen(Empleado e);
-
+    
     
     // Método para insertar un evento en la tabla historial.
     // Pasaremos como parámetro un objeto tipo evento, y no devolverá nada.
