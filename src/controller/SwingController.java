@@ -24,6 +24,7 @@ import swing.MenuView;
 import swing.MyView;
 import swing.TableData1;
 import utils.Events;
+import utils.IncidenceLevel;
 
 
 public class SwingController {
@@ -142,6 +143,11 @@ public class SwingController {
 		 incidence.setId(userLogged.getArangoKey());
 		 incidence.setCreatedAt(LocalDateTime.now());
 		 arangoDAO.createIncidence(incidence);
+		 
+		 if(incidence.getLevel().equals(IncidenceLevel.HIGH)) {
+			 Event event = new Event(Events.USER_URGENT_INCIDENCE, userLogged.getArangoKey(), LocalDateTime.now());
+			 arangoDAO.insertEvent(event);
+		 }
 	 }
 	 
 	 public List<Incidence> getIncidencesFromDAO() {
