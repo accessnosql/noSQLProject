@@ -41,6 +41,7 @@ public class SwingController {
 	 private List<Employee> employees;
 	 private List<Incidence> incidences;
 	 private List<Incidence> incidenceSearch;
+	 private List<Incidence> incidenceRanking;
 	 
 	 
 	 private static final SwingController instance = new SwingController();
