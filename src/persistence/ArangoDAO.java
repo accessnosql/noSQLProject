@@ -8,6 +8,8 @@ package persistence;
 import com.arangodb.ArangoDB;
 //import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -334,6 +336,62 @@ public class ArangoDAO {
 			JOptionPane.showMessageDialog(null, e0, "Info", JOptionPane.INFORMATION_MESSAGE);
        }
     
+    }
+    
+    public ArrayList<Event> getEventsList() {
+    	ArrayList<Event> eventList = new ArrayList<Event>();
+    	
+    	try {
+    		final String query = "FOR t IN historial return t";
+    		final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
+    		while(cursor.hasNext()) {
+    			BaseDocument b = cursor.next();
+    			
+    			System.out.println(b.getAttribute("dateTime").toString());
+    			System.out.println(b.getAttribute("event").toString());
+    			System.out.println(b.getAttribute("userKey").toString());
+    			
+    			Events events = Events.USER_LOGIN;
+    			
+    			switch(b.getAttribute("event").toString()) {
+    				case "USER_INCIDENCE":
+    					 events = Events.USER_INCIDENCE;
+    					break;
+    				case "USER_LOGIN":
+    					  events = Events.USER_LOGIN;
+    					 break;
+    				case "USER_URGENT_INCIDENCE":
+    					  events = Events.USER_URGENT_INCIDENCE;
+    					 break;
+					 default:
+						 break;
+    			}
+    			
+    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
+    			LocalDateTime dateTime = LocalDateTime.parse(b.getAttribute("dateTime").toString(), formatter);
+
+    			
+    			eventList.add(new Event(events, b.getAttribute("userKey").toString(), dateTime));
+    		}
+    		return eventList;
+    	} catch (final  ArangoDBException e) {
+    		System.err.println("Failed to execute query. " + e.getMessage());
+		}
+    	/*List<Incidence> incidencesList = new ArrayList<Incidence>();
+    	try {
+			final String query = "FOR t IN incidences return t";
+			final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
+			while(cursor.hasNext()) {
+				BaseDocument b = cursor.next();
+				incidencesList.add(incidenceConstructor(b));	
+			} // else user/pass wrong
+			return incidencesList;
+		} catch (final ArangoDBException e) {
+			System.err.println("Failed to execute query. " + e.getMessage());
+		}
+    	
+    	return null;*/
+    	return null;
     }
 }
     

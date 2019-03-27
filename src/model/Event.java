@@ -60,6 +60,12 @@ public class Event {
 	public void setArangoKey(String arangoKey) {
 		this.arangoKey = arangoKey;
 	}
+
+	@Override
+	public String toString() {
+		return "Event => " + eventTipo + ", employeeKey => " + employeeKey + ", dateTime=> " + dateTime;
+	}
+	
 	
 	
 	

@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -41,7 +42,8 @@ public class SwingController {
 	 private List<Employee> employees;
 	 private List<Incidence> incidences;
 	 private List<Incidence> incidenceSearch;
-	 private List<Incidence> incidenceRanking;
+	 private List<Event> incidenceRanking;
+	 private List<Event> urgentIncidencesRanking;
 	 
 	 
 	 private static final SwingController instance = new SwingController();
@@ -132,7 +134,6 @@ public class SwingController {
 	 }
 	 
 	 public List<Employee> getEmployees(){
-		 System.out.println("here");
 		 employees = arangoDAO.getAllEmployees();
 		 return employees;
 	 }
@@ -230,6 +231,32 @@ public class SwingController {
 	 public String deleteEmployeeLogins(Integer index) {
 		 arangoDAO.deleteLoginEvents(employees.get(index).getArangoKey(), Events.USER_LOGIN);
 		 return "Login historial deleted";
+	 }
+	 
+	 public List<Event> getHistoryList(){
+		 incidenceRanking = arangoDAO.getEventsList();
+		 return incidenceRanking;
+	 }
+	 
+	 public List<Event> getUrgentHistoryList(){
+		 urgentIncidencesRanking = new ArrayList<>();
+		 
+		 for (Event event : arangoDAO.getEventsList()) {
+			 if(event.getEventTipo().equals(Events.USER_URGENT_INCIDENCE)) {
+				 urgentIncidencesRanking.add(event);
+			 }
+			
+		}
+		 return urgentIncidencesRanking;
+	 }
+	 
+	 public void rankingEvents() {
+		 for (int i = 0; i < getEmployees().size(); i++) {
+			for (Event e : getUrgentHistoryList()) {
+				// esta lista de usuarios no tienen key, tendria que traer una lista de user por key para ser conparadas ...
+				//if(e.getEmployeeKey().equals(getEmployees().get(i).ge))
+			}
+		}
 	 }
 	 
 	 

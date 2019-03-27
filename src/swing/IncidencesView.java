@@ -58,83 +58,7 @@ public class IncidencesView extends JPanel {
 		
 		//NEW INCIDENCE, TAB 1
 		incidence = new Incidence(); //creation of the new incidence to fill
-		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("New incidence:", null, panel, null);
-		panel.setLayout(null);
-		
-		JLabel l1 = new JLabel("Incidence message:");
-		l1.setBounds(43, 65, 220, 22);
-		panel.add(l1);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(43, 113, 220, 102);
-		panel.add(scrollPane);
-		
-		JTextArea t1TextIncidence = new JTextArea();
-		scrollPane.setViewportView(t1TextIncidence);
-		
-		JLabel l2 = new JLabel("Level:");
-		l2.setBounds(45, 256, 129, 22);
-		panel.add(l2);
-		
-		JList listLevelInc = new JList(IncidenceLevel.getIncidenceLevels());
-		listLevelInc.setBounds(43, 289, 141, 106);
-		panel.add(listLevelInc);
-		listLevelInc.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String selectedItem = (String) listLevelInc.getSelectedValue();
-				System.out.println((String) listLevelInc.getSelectedValue());
-				incidence.setLevel(IncidenceLevel.getIncidenceByInt(listLevelInc.locationToIndex(e.getPoint())));
-			  }
-		    });
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(308, 118, 220, 270);
-		panel.add(scrollPane_1);
-		
-		JList<?> listEmpDest = new JList();
-		listEmpDest.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//int index = listEmpDest.locationToIndex(e.getPoint());
-				//String selectedItem = (String) listEmpDest.getSelectedValue().get;
-				int index = listEmpDest.locationToIndex(e.getPoint());
-				//System.out.println(listEmpDest.locationToIndex(e.getPoint()));
-				//System.out.println(controller.getEmployees().get(index).getArangoKey());
-				incidence.setEmployeeDest(controller.getEmployees().get(index).getArangoKey());
-			  }
-		    });
-		listEmpDest.setModel(eListModel);
 		eListModel.setEmployeesList(controller.getEmployees());
-		scrollPane_1.setViewportView(listEmpDest);
-		
-		
-		JLabel l3 = new JLabel("Employee destination:");
-		l3.setBounds(305, 69, 180, 18);
-		panel.add(l3);
-		
-		JTextArea result = new JTextArea();
-		result.setBounds(552, 181, 245, 207);
-		panel.add(result);
-		
-		JButton createInc = new JButton("Create");
-		createInc.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if("".equals(t1TextIncidence.getText())){
-			        result.setText("Please, enter a message");
-		        }
-				else {
-					incidence.setComment(t1TextIncidence.getText());
-					controller.createIncidence(incidence);
-					result.setText("New incidence added");
-				}
-			}
-		});
-		createInc.setBounds(602, 115, 121, 46);
-		panel.add(createInc);
 		
 		
 		
@@ -246,6 +170,82 @@ public class IncidencesView extends JPanel {
 		JLabel lblNewLabel_7 = new JLabel("Incidences:");
 		lblNewLabel_7.setBounds(467, 63, 145, 14);
 		panel_3.add(lblNewLabel_7);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("New incidence:", null, panel, null);
+		panel.setLayout(null);
+		
+		JLabel l1 = new JLabel("Incidence message:");
+		l1.setBounds(43, 65, 220, 22);
+		panel.add(l1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(43, 113, 220, 102);
+		panel.add(scrollPane);
+		
+		JTextArea t1TextIncidence = new JTextArea();
+		scrollPane.setViewportView(t1TextIncidence);
+		
+		JLabel l2 = new JLabel("Level:");
+		l2.setBounds(45, 256, 129, 22);
+		panel.add(l2);
+		
+		JList listLevelInc = new JList(IncidenceLevel.getIncidenceLevels());
+		listLevelInc.setBounds(43, 289, 141, 106);
+		panel.add(listLevelInc);
+		listLevelInc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String selectedItem = (String) listLevelInc.getSelectedValue();
+				System.out.println((String) listLevelInc.getSelectedValue());
+				incidence.setLevel(IncidenceLevel.getIncidenceByInt(listLevelInc.locationToIndex(e.getPoint())));
+			  }
+		    });
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(308, 118, 220, 270);
+		panel.add(scrollPane_1);
+		
+		JList<?> listEmpDest = new JList();
+		listEmpDest.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//int index = listEmpDest.locationToIndex(e.getPoint());
+				//String selectedItem = (String) listEmpDest.getSelectedValue().get;
+				int index = listEmpDest.locationToIndex(e.getPoint());
+				//System.out.println(listEmpDest.locationToIndex(e.getPoint()));
+				//System.out.println(controller.getEmployees().get(index).getArangoKey());
+				incidence.setEmployeeDest(controller.getEmployees().get(index).getArangoKey());
+			  }
+		    });
+		listEmpDest.setModel(eListModel);
+		scrollPane_1.setViewportView(listEmpDest);
+		
+		
+		JLabel l3 = new JLabel("Employee destination:");
+		l3.setBounds(305, 69, 180, 18);
+		panel.add(l3);
+		
+		JTextArea result = new JTextArea();
+		result.setBounds(552, 181, 245, 207);
+		panel.add(result);
+		
+		JButton createInc = new JButton("Create");
+		createInc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if("".equals(t1TextIncidence.getText())){
+			        result.setText("Please, enter a message");
+		        }
+				else {
+					incidence.setComment(t1TextIncidence.getText());
+					controller.createIncidence(incidence);
+					result.setText("New incidence added");
+				}
+			}
+		});
+		createInc.setBounds(602, 115, 121, 46);
+		panel.add(createInc);
 		
 		
 		//TAB 5: INCIDENCES TO AN EMPLOYEE

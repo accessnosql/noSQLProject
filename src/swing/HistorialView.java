@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import controller.SwingController;
 import model.EmployeeListModel;
+import model.EventListModel;
 import model.IncidenceListModel;
 
 import javax.swing.JButton;
@@ -15,11 +16,13 @@ import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class HistorialView extends JPanel {
 
 	private final EmployeeListModel eListModel = new EmployeeListModel();
 	private final IncidenceListModel iListModel = new IncidenceListModel();
+	private final EventListModel eventListModel = new EventListModel();
 	private Integer index;
 	SwingController controller = SwingController.getInstance();
 	
@@ -104,6 +107,21 @@ public class HistorialView extends JPanel {
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Rank incidences", null, panel_2, null);
+		panel_2.setLayout(null);
+		
+		
+		// TAP 3 Ranking Urgent Events
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(70, 76, 668, 324);
+		panel_2.add(scrollPane_1);
+		
+		JList<?> rankingList = new JList();
+		
+		scrollPane_1.setViewportView(rankingList);
+		rankingList.setModel(eventListModel);
+		System.out.println(" -----------------" + controller.getEmployees().size());
+		eventListModel.setEventList(controller.getUrgentHistoryList());
 		
 		
 	}
