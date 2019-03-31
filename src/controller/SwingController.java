@@ -54,6 +54,7 @@ public class SwingController {
 	   login = new LoginView();
 	   view = new MyView(login);
 	   arangoDAO = new ArangoDAO();
+	   arangoDAO.createAdminIfNotExist();
 	   initController();
 	   
 
@@ -118,8 +119,11 @@ public class SwingController {
 	 }
 	 
 	 public void deleteEmployee(int index) {
-		 //TODO: al eliminar, ¿que pasa con las incidences? reasignar?
+		 //TODO: al eliminar, ¿que pasa con las incidences? reasignar?. Por el momento borramos todos los
+		 //registros asociados
 		 arangoDAO.deleteEmployee(employees.get(index));
+		 arangoDAO.deleteEmployeeIncidences(employees.get(index));
+		 arangoDAO.deleteEmployeeHistorial(employees.get(index));
 	 }
 	 
 	 public String[] getEmployeeNames() {
@@ -238,18 +242,15 @@ public class SwingController {
 		 return incidenceRanking;
 	 }
 	 
-	 public List<Event> getUrgentHistoryList(){
-		 urgentIncidencesRanking = new ArrayList<>();
-		 
-		 for (Event event : arangoDAO.getEventsList()) {
-			 if(event.getEventTipo().equals(Events.USER_URGENT_INCIDENCE)) {
-				 urgentIncidencesRanking.add(event);
-			 }
-			
-		}
-		 return urgentIncidencesRanking;
+	 /*
+	  * TODO
+	 public String[] getUrgentHistoryList(){
+		 String[] ranking = arangoDAO.getRanking();
+		 return ranking;
 	 }
+	 */
 	 
+	 /*
 	 public void rankingEvents() {
 		 for (int i = 0; i < getEmployees().size(); i++) {
 			for (Event e : getUrgentHistoryList()) {
@@ -258,7 +259,7 @@ public class SwingController {
 			}
 		}
 	 }
-	 
+	 */
 	 
 	 
 	                                    //VIEWS

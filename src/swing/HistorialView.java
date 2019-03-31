@@ -116,13 +116,16 @@ public class HistorialView extends JPanel {
 		scrollPane_1.setBounds(70, 76, 668, 324);
 		panel_2.add(scrollPane_1);
 		
-		JList<?> rankingList = new JList();
+		//TODO
+		//JList<String> rankingList = new JList(controller.getUrgentHistoryList());
+		//panel.add(rankingList);
 		
+		/*
 		scrollPane_1.setViewportView(rankingList);
 		rankingList.setModel(eventListModel);
 		System.out.println(" -----------------" + controller.getEmployees().size());
 		eventListModel.setEventList(controller.getUrgentHistoryList());
 		
-		
+		*/
 	}
 }

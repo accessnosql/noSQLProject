@@ -241,6 +241,8 @@ public class IncidencesView extends JPanel {
 					incidence.setComment(t1TextIncidence.getText());
 					controller.createIncidence(incidence);
 					result.setText("New incidence added");
+					revalidate();
+					repaint();
 				}
 			}
 		});
@@ -287,9 +289,7 @@ public class IncidencesView extends JPanel {
 		panel_4.add(lblNewLabel_9);
 		
 		
-		
-		
-		
-		
 	}
+	
+
 }

@@ -28,10 +28,12 @@ public class LoginView extends JPanel {
 		name.setBounds(196, 255, 479, 40);
 		add(name);
 		name.setColumns(10);
+		name.setText("admin");
 		
 		password = new JPasswordField();
 		password.setBounds(196, 324, 479, 40);
 		add(password);
+		password.setText("admin");
 		
 		loginButton = new JButton("Login");
 		loginButton.setBounds(377, 441, 101, 23);

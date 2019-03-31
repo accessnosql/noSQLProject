@@ -169,23 +169,31 @@ public class EmployeesView extends JPanel {
 		JLabel result2 = new JLabel("");
 		result2.setBounds(416, 374, 258, 34);
 		panel_2.add(result2);
-		
+		JButton btnNewButton_3 = new JButton("Delete");
+		btnNewButton_3.setVisible(false);
 		JList list = new JList(controller.getEmployeeNames());
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				btnNewButton_3.setVisible(true);
 				index = list.locationToIndex(e.getPoint());
 			}
 		});
 		scrollPane.setViewportView(list);
-		JButton btnNewButton_3 = new JButton("Delete");
 		JButton btnConfirm = new JButton("Confirm");
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String key = controller.getEmployees().get(index).getArangoKey();
+				if(controller.getUserLogged().getArangoKey().contentEquals(key)) {
+					textField_3.setText(null);
+					textField_4.setText(null);
+				}
 				controller.deleteEmployee(index);
 				btnConfirm.setVisible(false);
-				btnNewButton_3.setVisible(true);
+				btnNewButton_3.setVisible(false);
 				result2.setText("Employee deleted");
+				list.setListData(controller.getEmployeeNames());
+				
 			}
 		});
 		

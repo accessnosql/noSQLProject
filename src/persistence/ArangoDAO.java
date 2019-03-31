@@ -59,6 +59,9 @@ public class ArangoDAO {
     }
     
     
+    
+    
+    
     public void createDatabase() {
  			try {
  				arangoDB.createDatabase(DBNAME);
@@ -160,6 +163,31 @@ public class ArangoDAO {
     
    public void deleteEmployee(Employee e) throws ArangoDBException {
 	   arangoDB.db(DBNAME).collection("employees").deleteDocument(e.getArangoKey());
+   }
+   
+   public void deleteEmployeeIncidences(Employee e) {
+	
+		final String query = "FOR t IN incidences FILTER t.id == @id or t.employeeDest == @employeeDest RETURN t";
+		final Map<String, Object> bindVars = new MapBuilder().put("id", e.getArangoKey()).get();
+		bindVars.put("employeeDest", e.getArangoKey());
+		final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+			BaseDocument.class);
+		while(cursor.hasNext()) {
+			BaseDocument b = cursor.next();
+			arangoDB.db(DBNAME).collection("incidences").deleteDocument(b.getKey());
+		} 
+	
+   }
+   
+   public void deleteEmployeeHistorial(Employee e) {
+	   final String query = "FOR t IN historial FILTER t.userKey == @userKey RETURN t";
+		final Map<String, Object> bindVars = new MapBuilder().put("userKey", e.getArangoKey()).get();
+		final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+			BaseDocument.class);
+		while(cursor.hasNext()) {
+			BaseDocument b = cursor.next();
+			arangoDB.db(DBNAME).collection("historial").deleteDocument(b.getKey());
+		} 
    }
 
     
@@ -338,6 +366,27 @@ public class ArangoDAO {
     
     }
     
+    /*TODO
+    public String[] getRanking() {
+    	final String query = "FOR t IN historial "
+    			            + "COLLECT t.userKey INTO g "
+    			            + "LET total = (FOR value IN g[*].t SORT value.timestamp DESC RETURN value.tot) "
+    			            + "RETURN total";
+    	final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, BaseDocument.class);
+		while(cursor.hasNext()) {
+			BaseDocument b = cursor.next();
+			System.out.println(b.toString());
+		}		
+    	return null;
+    }
+    */
+    
+    /*
+    FOR doc IN collection
+    COLLECT id = doc.id INTO g 
+    LET names = (FOR value IN g[*].doc SORT value.timestamp DESC RETURN value.name) 
+    RETURN names */
+    
     public ArrayList<Event> getEventsList() {
     	ArrayList<Event> eventList = new ArrayList<Event>();
     	
@@ -393,6 +442,26 @@ public class ArangoDAO {
     	return null;*/
     	return null;
     }
+    
+    
+    public void createAdminIfNotExist() {
+    	if(!existsAdmin()) {
+    		Employee e = new Employee("admin","admin");
+    		insertEmployee(e);
+    	}
+    }
+		
+	public boolean existsAdmin() {
+		final String query = "FOR t IN employees FILTER t.username == @username and t.password == @password RETURN t";
+		final Map<String, Object> bindVars = new MapBuilder().put("username", "admin").get();
+		bindVars.put("password", "admin");
+		final ArangoCursor<BaseDocument> cursor = arangoDB.db(DBNAME).query(query, bindVars, null,
+			BaseDocument.class);
+		if(cursor.hasNext()) {
+			return true;
+        }
+		return false;
+	}
 }
     
     /*
